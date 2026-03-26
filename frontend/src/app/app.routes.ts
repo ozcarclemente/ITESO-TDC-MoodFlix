@@ -13,6 +13,11 @@ export const routes: Routes = [
       import('./features/auth/login/login').then(m => m.Login),
   },
   {
+    path: 'auth/callback',
+    loadComponent: () =>
+      import('./features/auth/callback/callback').then(m => m.Callback),
+  },
+  {
     path: 'questionnaire',
     loadComponent: () =>
       import('./features/questionnaire/questionnaire').then(m => m.Questionnaire),
