@@ -1,0 +1,69 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Restamos aproximadamente el tamaño del navbar para centrarlo perfecto */
+    min-height: calc(100vh - 80px); 
+    background-color: #f8fafc;
+    padding: 2rem;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  
+  .login-card {
+    background: #ffffff;
+    padding: 3rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+  
+    h2 {
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+      font-size: 1.8rem;
+    }
+  
+    p {
+      color: #64748b;
+      margin-bottom: 2.5rem;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+  
+    .btn-google {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 0.8rem;
+      background: #ffffff;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 1.5rem;
+  
+      &:hover {
+        background: #f1f5f9;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+    }
+  
+    .link-back {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+  
+      &:hover {
+        color: #3b82f6;
+        text-decoration: underline;
+      }
+    }
+  }

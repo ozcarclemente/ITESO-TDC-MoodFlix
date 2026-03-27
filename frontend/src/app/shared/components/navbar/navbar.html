@@ -1,4 +1,64 @@
-<nav>
-  <a routerLink="/">MoodFlix</a>
-  <a routerLink="/auth/login">Iniciar sesión</a>
+<nav class="navbar">
+  <div class="nav-brand">
+    @if(isAuthenticated){
+
+    <a routerLink="/home" class="brand-link" (click)="closeMenu()">
+      <span class="brand-icon">🎬</span>
+      <span class="brand-name">Mood<span class="brand-accent">Flix</span></span>
+    </a>
+    }
+    @else {
+    <a routerLink="/" class="brand-link" (click)="closeMenu()">
+      <span class="brand-icon">🎬</span>
+      <span class="brand-name">Mood<span class="brand-accent">Flix</span></span>
+    </a>
+    }
+  </div>
+
+  <!-- Desktop links -->
+  <div class="nav-links">
+    @if (isAuthenticated) {
+    <a routerLink="/home" class="nav-item">Inicio</a>
+    <a routerLink="/lists" class="nav-item">Mis listas</a>
+    <a routerLink="/questionnaire" class="nav-item">Mi cuestionario</a>
+    <div class="nav-avatar-wrapper">
+      <div class="nav-avatar">
+        <span class="avatar-icon">👤</span>
+      </div>
+      <div class="avatar-dropdown">
+        <a routerLink="/profile" class="dropdown-item">Mi perfil</a>
+        <button (click)="logout()" class="dropdown-item dropdown-logout">Cerrar sesión</button>
+      </div>
+    </div>
+    } @else {
+    <a routerLink="/" class="nav-item">Inicio</a>
+    <a routerLink="/auth/login" class="btn-login">Iniciar sesión</a>
+    }
+  </div>
+
+  <!-- Botón hamburguesa -->
+  <button class="nav-hamburger" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen()" aria-label="Abrir menú">
+    <span class="hamburger-line" [class.open]="menuOpen()"></span>
+    <span class="hamburger-line" [class.open]="menuOpen()"></span>
+    <span class="hamburger-line" [class.open]="menuOpen()"></span>
+  </button>
 </nav>
+
+<!-- Drawer mobile — fuera del nav para evitar overflow issues -->
+@if (menuOpen()) {
+<div class="mobile-drawer">
+  @if (isAuthenticated) {
+  <a routerLink="/home" class="drawer-item" (click)="closeMenu()">Inicio</a>
+  <a routerLink="/lists" class="drawer-item" (click)="closeMenu()">Mis listas</a>
+  <a routerLink="/questionnaire" class="drawer-item" (click)="closeMenu()">Mi cuestionario</a>
+  <div class="drawer-footer">
+    <a routerLink="/profile" class="drawer-item" (click)="closeMenu()">Mi perfil</a>
+    <button (click)="logout()" class="drawer-item drawer-item--danger">Cerrar sesión</button>
+  </div>
+  } @else {
+  <a routerLink="/" class="drawer-item" (click)="closeMenu()">Inicio</a>
+  <a routerLink="/auth/login" class="drawer-item drawer-item--accent" (click)="closeMenu()">Iniciar sesión</a>
+  }
+</div>
+<div class="mobile-overlay" (click)="closeMenu()"></div>
+}

@@ -1,0 +1,328 @@
+// ── MoodFlix Navbar ──────────────────────────────────────────────────────────
+@use 'sass:color';
+@use '../../../../styles' as *;
+
+// ── Base ─────────────────────────────────────────────────────────────────────
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: $nav-height;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 $space-6;
+  background: $color-bg-glass;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid $color-border;
+  font-family: $font-body;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, $color-accent, transparent);
+  }
+}
+
+// ── Brand ─────────────────────────────────────────────────────────────────────
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  text-decoration: none;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.brand-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.brand-name {
+  font-family: $font-display;
+  font-size: 1.8rem;
+  letter-spacing: 0.03em;
+  color: $color-text;
+  line-height: 1;
+}
+
+.brand-accent {
+  color: $color-accent;
+}
+
+// ── Desktop links ─────────────────────────────────────────────────────────────
+.nav-links {
+  display: none;
+  align-items: center;
+  gap: $space-1;
+
+  @include md {
+    display: flex;
+  }
+}
+
+.nav-item {
+  position: relative;
+  padding: $space-2 $space-3;
+  font-size: $text-sm;
+  font-weight: 500;
+  color: $color-text-muted;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 60%;
+    height: 1px;
+    background: $color-accent;
+    transition: transform 0.25s ease;
+  }
+
+  &:hover {
+    color: $color-text;
+
+    &::after {
+      transform: translateX(-50%) scaleX(1);
+    }
+  }
+}
+
+.btn-login {
+  display: inline-flex;
+  align-items: center;
+  padding: $space-2 $space-5;
+  margin-left: $space-2;
+  background: $color-accent;
+  color: $color-bg;
+  font-family: $font-body;
+  font-size: $text-sm;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  border: none;
+  cursor: pointer;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  transition: background 0.2s, transform 0.15s;
+
+  &:hover {
+    background: $color-accent-dim;
+    transform: translateY(-1px);
+  }
+}
+
+// ── Avatar desktop ────────────────────────────────────────────────────────────
+.nav-avatar-wrapper {
+  position: relative;
+  margin-left: $space-2;
+
+  &:hover .avatar-dropdown {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+  }
+}
+
+.nav-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: $radius-full;
+  background: $color-bg;
+  border: 2px solid $color-accent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
+
+  &:hover {
+    transform: scale(1.05);
+    border-color: color.adjust($color-accent, $lightness: 10%);
+  }
+}
+
+.avatar-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.avatar-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 160px;
+  background: $color-bg-surface;
+  border: 1px solid $color-border;
+  border-top: 2px solid $color-accent;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 100;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: $space-3 $space-4;
+  font-family: $font-body;
+  font-size: $text-sm;
+  font-weight: 500;
+  color: $color-text-muted;
+  text-decoration: none;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+
+  &:hover {
+    color: $color-text;
+    background: $color-border-subtle;
+  }
+}
+
+.dropdown-logout {
+  color: $color-danger;
+  border-top: 1px solid $color-border;
+
+  &:hover {
+    color: color.adjust($color-danger, $lightness: 10%);
+    background: $color-danger-muted;
+  }
+}
+
+// ── Hamburguesa ───────────────────────────────────────────────────────────────
+.nav-hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $space-1;
+
+  @include md {
+    display: none;
+  }
+}
+
+.hamburger-line {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: $color-text;
+  border-radius: $radius-full;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform-origin: center;
+
+  &.open {
+    &:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    &:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    &:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+  }
+}
+
+// ── Mobile drawer ─────────────────────────────────────────────────────────────
+.mobile-drawer {
+  position: fixed;
+  top: $nav-height;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: $color-bg;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  padding: $space-4 $space-6;
+  overflow-y: auto;
+
+  @include md {
+    display: none;
+  }
+}
+
+.drawer-item {
+  display: block;
+  padding: $space-4 0;
+  font-family: $font-body;
+  font-size: $text-base;
+  font-weight: 500;
+  color: $color-text-muted;
+  text-decoration: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  border-bottom: 1px solid $color-border-subtle;
+  transition: color 0.2s;
+
+  &:hover {
+    color: $color-text;
+  }
+
+  &--accent {
+    color: $color-accent;
+    font-weight: 600;
+    border-bottom: none;
+    margin-top: $space-2;
+
+    &:hover {
+      color: $color-accent-dim;
+    }
+  }
+
+  &--danger {
+    color: $color-danger;
+    border-bottom: none;
+
+    &:hover {
+      color: color.adjust($color-danger, $lightness: 10%);
+    }
+  }
+}
+
+.drawer-footer {
+  margin-top: auto;
+  padding-top: $space-4;
+  border-top: 1px solid $color-border-subtle;
+}
+
+// ── Overlay ───────────────────────────────────────────────────────────────────
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+
+  @include md {
+    display: none;
+  }
+}

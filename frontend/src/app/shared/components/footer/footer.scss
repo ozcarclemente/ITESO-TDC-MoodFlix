@@ -1,0 +1,117 @@
+// ── MoodFlix Footer ───────────────────────────────────────────────────────────
+@use '../../../../styles' as *;
+
+.footer {
+  background: $color-bg-surface;
+  border-top: 1px solid $color-border;
+}
+
+// ── Fila principal ────────────────────────────────────────────────────────────
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: $space-10 $space-4;
+
+  @include md {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: $space-8 $space-8;
+  }
+}
+
+// ── Brand ─────────────────────────────────────────────────────────────────────
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.footer-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  text-decoration: none;
+  transition: opacity 0.2s;
+
+  &:hover { opacity: 0.8; }
+}
+
+.footer-brand-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.footer-brand-name {
+  font-family: $font-display;
+  font-size: 1.6rem;
+  letter-spacing: 0.03em;
+  color: $color-text;
+  line-height: 1;
+}
+
+.footer-brand-accent { color: $color-accent; }
+
+.footer-tagline {
+  font-size: $text-sm;
+  color: $color-text-muted;
+  margin: 0;
+}
+
+// ── Links ─────────────────────────────────────────────────────────────────────
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+}
+
+.footer-link {
+  font-size: $text-sm;
+  font-weight: 500;
+  color: $color-text-muted;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover { color: $color-accent; }
+
+  &--github {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+  }
+}
+
+.footer-github-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.footer-divider {
+  display: block;
+  width: 1px;
+  height: 14px;
+  background: $color-border;
+}
+
+// ── Copyright ─────────────────────────────────────────────────────────────────
+.footer-bottom {
+  border-top: 1px solid $color-border-subtle;
+  padding: $space-4 $space-4;
+  max-width: $max-width;
+  margin: 0 auto;
+  width: 100%;
+
+  @include md {
+    padding: $space-4 $space-8;
+  }
+}
+
+.footer-copyright {
+  font-size: $text-xs;
+  color: $color-text-muted;
+  margin: 0;
+}

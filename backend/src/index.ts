@@ -1,13 +1,14 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import { initPassport } from './config/passport';
 import router from './routes';
 
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
