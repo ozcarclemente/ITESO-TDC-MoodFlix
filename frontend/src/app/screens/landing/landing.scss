@@ -1,0 +1,158 @@
+// ── MoodFlix Landing ──────────────────────────────────────────────────────────
+@use '../../../styles' as *;
+
+// ── Sección principal ─────────────────────────────────────────────────────────
+.landing {
+  flex: 1;
+  display: flex;
+  align-items: center
+}
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+.landing-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-12;
+  width: 100%;
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: $space-16 $space-4;
+
+  @include lg {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: $space-20 $space-8;
+  }
+}
+
+// ── Contenido ─────────────────────────────────────────────────────────────────
+.landing-hero__content {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+  max-width: 540px;
+  text-align: center;
+
+  @include lg {
+    text-align: left;
+  }
+}
+
+.landing-hero__eyebrow {
+  font-size: $text-sm;
+  font-weight: 600;
+  color: $color-accent;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.landing-hero__title {
+  font-family: $font-display;
+  font-size: clamp(4rem, 10vw, 7rem);
+  line-height: 0.95;
+  color: $color-text;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.landing-hero__accent {
+  color: $color-accent;
+}
+
+.landing-hero__description {
+  font-size: $text-lg;
+  color: $color-text-muted;
+  line-height: 1.7;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.landing-hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-4;
+  justify-content: center;
+
+  @include lg {
+    justify-content: flex-start;
+  }
+}
+
+// ── Visual / Mood grid ────────────────────────────────────────────────────────
+.landing-hero__visual {
+  flex-shrink: 0;
+}
+
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-3;
+  width: 280px;
+
+  @include md {
+    width: 320px;
+    gap: $space-4;
+  }
+}
+
+.mood-card {
+  aspect-ratio: 2 /1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-4 $space-5;
+  background: $color-bg-surface;
+  border: 1px solid $color-border-subtle;
+  border-radius: $radius-lg;
+  font-size: $text-sm;
+  font-weight: 500;
+  color: $color-text-muted;
+  text-align: center;
+  transition: border-color 0.3s, color 0.3s, transform 0.3s;
+  animation: float-in 0.6s ease both;
+
+  &:hover {
+    border-color: $color-accent;
+    color: $color-text;
+    transform: translateY(-3px);
+  }
+
+  // Delays escalonados para animación de entrada
+  &--1 {
+    animation-delay: 0.0s;
+  }
+
+  &--2 {
+    animation-delay: 0.1s;
+  }
+
+  &--3 {
+    animation-delay: 0.2s;
+  }
+
+  &--4 {
+    animation-delay: 0.3s;
+  }
+
+  &--5 {
+    animation-delay: 0.4s;
+  }
+
+  &--6 {
+    animation-delay: 0.5s;
+  }
+}
+
+@keyframes float-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -12,6 +12,6 @@ export class Callback implements OnInit {
 
   ngOnInit(): void {
     this.authService.setAuthenticated();
-    this.router.navigate(['/questionnaire']);
+    this.router.navigate(['/home']);
   }
 }

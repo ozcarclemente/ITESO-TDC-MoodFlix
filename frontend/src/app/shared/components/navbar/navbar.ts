@@ -1,4 +1,4 @@
-import { Component, inject, signal, HostListener } from '@angular/core';
+import { Component, inject, signal, HostListener, ElementRef } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
 
@@ -12,7 +12,9 @@ import { Auth } from '../../../core/services/auth';
 export class Navbar {
   private authService = inject(Auth);
   private router = inject(Router);
+  private el = inject(ElementRef);
 
+  avatarDropdownOpen = signal(false);
   menuOpen = signal(false);
 
   get isAuthenticated(): boolean {
@@ -37,6 +39,19 @@ export class Navbar {
   onResize(event: Event): void {
     if ((event.target as Window).innerWidth >= 768) {
       this.closeMenu();
+    }
+  }
+
+  // Lógica para el dropdown del avatar
+
+  toggleAvatarDropdown(): void {
+    this.avatarDropdownOpen.update(v => !v);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.el.nativeElement.contains(event.target)) {
+      this.avatarDropdownOpen.set(false);
     }
   }
 }

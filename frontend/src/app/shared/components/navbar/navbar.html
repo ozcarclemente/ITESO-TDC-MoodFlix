@@ -21,7 +21,8 @@
     <a routerLink="/home" class="nav-item">Inicio</a>
     <a routerLink="/lists" class="nav-item">Mis listas</a>
     <a routerLink="/questionnaire" class="nav-item">Mi cuestionario</a>
-    <div class="nav-avatar-wrapper">
+    <!-- Logica para mostrar el avatar y dropdown -->
+    <div class="nav-avatar-wrapper" [class.is-open]="avatarDropdownOpen()" (click)="toggleAvatarDropdown()">
       <div class="nav-avatar">
         <span class="avatar-icon">👤</span>
       </div>

@@ -1,15 +1,266 @@
-/* You can add global styles to this file, and also import other style files */
+// ══════════════════════════════════════════════════════════════════════════════
+// MoodFlix — Global Styles
+// ══════════════════════════════════════════════════════════════════════════════
 
+// ── Fuentes ───────────────────────────────────────────────────────────────────
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap');
 
-/* frontend/src/styles.scss */
-html, body {
-    height: 100%;
-    margin: 0;
-    background-color: #f8fafc; /* Fondo general de la app */
+// ── Paleta de colores ─────────────────────────────────────────────────────────
+
+// Fondos
+$color-bg: #0a0a0a; // Fondo principal (negro profundo)
+$color-bg-surface: #141414; // Cards, modales, superficies elevadas
+$color-bg-subtle: #1e1e1e; // Inputs, hover states, filas de tabla
+$color-bg-glass: rgba(10, 10, 10, 0.92); // Navbar y elementos con blur
+
+// Acento
+$color-accent: #f5c518; // Amarillo principal
+$color-accent-dim: #c9a010; // Amarillo hover / pressed
+$color-accent-muted: rgba(245, 197, 24, 0.12); // Fondos con tinte amarillo
+
+// Texto
+$color-text: #e8e8e0; // Texto primario
+$color-text-muted: #888880; // Texto secundario / labels
+$color-text-disabled: #444440; // Texto deshabilitado
+
+// Bordes
+$color-border: rgba(245, 197, 24, 0.15); // Borde con tinte de acento
+$color-border-subtle: rgba(255, 255, 255, 0.06); // Borde neutro sutil
+
+// Semánticos
+$color-danger: #e05555; // Errores / eliminar
+$color-danger-muted: rgba(224, 85, 85, 0.10);
+$color-success: #4caf7d; // Confirmaciones
+$color-success-muted: rgba(76, 175, 125, 0.10);
+
+// ── Tipografía ────────────────────────────────────────────────────────────────
+
+$font-display: 'Bebas Neue', sans-serif; // Títulos, logo, headings grandes
+$font-body: 'DM Sans', sans-serif; // Cuerpo, navegación, UI en general
+
+// Escala tipográfica
+$text-xs: 0.75rem; // 12px — labels, badges
+$text-sm: 0.875rem; // 14px — nav items, captions
+$text-base: 1rem; // 16px — cuerpo de texto
+$text-lg: 1.125rem; // 18px — subtítulos
+$text-xl: 1.25rem; // 20px — títulos de sección
+$text-2xl: 1.5rem; // 24px — headings medianos
+$text-3xl: 2rem; // 32px — headings grandes
+$text-4xl: 2.5rem; // 40px — display / hero
+
+// ── Espaciados ────────────────────────────────────────────────────────────────
+
+$space-1: 0.25rem; // 4px
+$space-2: 0.5rem; // 8px
+$space-3: 0.75rem; // 12px
+$space-4: 1rem; // 16px
+$space-5: 1.25rem; // 20px
+$space-6: 1.5rem; // 24px
+$space-8: 2rem; // 32px
+$space-10: 2.5rem; // 40px
+$space-12: 3rem; // 48px
+$space-16: 4rem; // 64px
+$space-20: 5rem; // 80px
+
+// ── Border radius ─────────────────────────────────────────────────────────────
+
+$radius-sm: 4px; // Badges, chips pequeños
+$radius-md: 8px; // Inputs, botones
+$radius-lg: 12px; // Cards, modales
+$radius-xl: 20px; // Elementos pill / redondeados
+$radius-full: 9999px; // Completamente circular (avatares)
+
+// ── Breakpoints ───────────────────────────────────────────────────────────────
+
+$bp-sm: 480px; // Móvil grande
+$bp-md: 768px; // Tablet
+$bp-lg: 1024px; // Desktop
+$bp-xl: 1280px; // Desktop ancho
+$bp-2xl: 1536px; // Pantallas grandes
+
+// Mixins responsive (mobile-first)
+@mixin sm {
+  @media (min-width: $bp-sm) {
+    @content;
   }
-  
-  app-root {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+}
+
+@mixin md {
+  @media (min-width: $bp-md) {
+    @content;
   }
+}
+
+@mixin lg {
+  @media (min-width: $bp-lg) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media (min-width: $bp-xl) {
+    @content;
+  }
+}
+
+@mixin xxl {
+  @media (min-width: $bp-2xl) {
+    @content;
+  }
+}
+
+// ── Layout ────────────────────────────────────────────────────────────────────
+
+$nav-height: 64px;
+$max-width: 1280px;
+$content-padding: $space-4; // Padding horizontal en mobile
+
+// ── Reset & base ──────────────────────────────────────────────────────────────
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: $font-body;
+  font-size: $text-base;
+  font-weight: 400;
+  color: $color-text;
+  background-color: $color-bg;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+// ── Clases utilitarias ────────────────────────────────────────────────────────
+
+// Contenedor centrado con ancho máximo
+.container {
+  width: 100%;
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: 0 $content-padding;
+
+  @include md {
+    padding: 0 $space-8;
+  }
+}
+
+// Layout base — footer siempre al fondo
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+// Offset para el navbar fijo + ocupa el espacio disponible
+.page-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: $nav-height;
+}
+
+// Texto con color de acento
+.text-accent {
+  color: $color-accent;
+}
+
+.text-muted {
+  color: $color-text-muted;
+}
+
+// Botón primario reutilizable
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-3 $space-6;
+  background: $color-accent;
+  color: $color-bg;
+  font-family: $font-body;
+  font-size: $text-sm;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  transition: background 0.2s ease, transform 0.15s ease;
+
+  &:hover {
+    background: $color-accent-dim;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Botón secundario (outline)
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-3 $space-6;
+  background: transparent;
+  color: $color-text;
+  font-family: $font-body;
+  font-size: $text-sm;
+  font-weight: 500;
+  border: 1px solid $color-border;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    border-color: $color-accent;
+    color: $color-accent;
+  }
+}
+
+// ── Scrollbar personalizado ───────────────────────────────────────────────────
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: $color-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $color-bg-subtle;
+  border-radius: $radius-full;
+
+  &:hover {
+    background: $color-text-disabled;
+  }
+}
+
+// ── Selección de texto ────────────────────────────────────────────────────────
+
+::selection {
+  background: $color-accent-muted;
+  color: $color-accent;
+}
+
+// ── Páginas — ocupan el espacio disponible del layout ─────────────────────────
+app-landing,
+app-login,
+app-home,
+app-questionnaire,
+app-recommendations {
+  display: flex;
+  flex: 1;
+}

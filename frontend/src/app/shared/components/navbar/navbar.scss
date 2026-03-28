@@ -131,11 +131,11 @@
   position: relative;
   margin-left: $space-2;
 
-  &:hover .avatar-dropdown {
+  &.is-open .avatar-dropdown {
     opacity: 1;
     pointer-events: all;
     transform: translateY(0);
-  }
+  } 
 }
 
 .nav-avatar {

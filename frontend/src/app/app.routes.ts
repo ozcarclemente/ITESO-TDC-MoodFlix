@@ -5,28 +5,33 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./features/landing/landing').then(m => m.Landing),
+      import('./screens/landing/landing').then(m => m.Landing),
+  },
+  {
+    path: 'home',
+    loadComponent: () =>
+      import('./screens/home/home').then(m => m.Home),
   },
   {
     path: 'auth/login',
     loadComponent: () =>
-      import('./features/auth/login/login').then(m => m.Login),
+      import('./screens/auth/login/login').then(m => m.Login),
   },
   {
     path: 'auth/callback',
     loadComponent: () =>
-      import('./features/auth/callback/callback').then(m => m.Callback),
+      import('./screens/auth/callback/callback').then(m => m.Callback),
   },
   {
     path: 'questionnaire',
     loadComponent: () =>
-      import('./features/questionnaire/questionnaire').then(m => m.Questionnaire),
+      import('./screens/questionnaire/questionnaire').then(m => m.Questionnaire),
     canActivate: [authGuard],
   },
   {
     path: 'recommendations',
     loadComponent: () =>
-      import('./features/recommendations/recommendations').then(m => m.Recommendations),
+      import('./screens/recommendations/recommendations').then(m => m.Recommendations),
     canActivate: [authGuard],
   },
   {
