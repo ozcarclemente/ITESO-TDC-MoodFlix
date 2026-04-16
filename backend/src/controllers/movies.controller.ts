@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { Movie } from '../models/movie.model';
+import { number } from 'zod';
 
 export const listMovies = async (req: Request, res: Response) => {
     try {
@@ -39,5 +40,27 @@ export const getMovie = async (req: Request, res: Response) => {
         res.json(movie);
     } catch (err) {
         res.status(500).json({ message: 'Error fetching movie' });
+    }
+};
+
+
+export const getRecommendations = async (req: Request, res: Response) => {
+    try {
+        const { mood, energyLevel, timeAvailable } = req.body;
+
+        const filter: Record<string, any> = {};
+
+        if (mood) filter['scores.moods'] = mood;
+        
+        if (energyLevel) filter['scores.energyLevels'] = energyLevel;
+        
+        if (timeAvailable) filter.runtimeMinutes = { $lte: Number(timeAvailable) };
+
+        const movies = await Movie.find(filter).limit(12);
+
+        res.json(movies);
+    } catch (err) {
+        console.error('Error al procesar recomendaciones:', err);
+        res.status(500).json({ message: 'Error al generar recomendaciones' });
     }
 };

@@ -1,1 +1,43 @@
-<p>recommendations works!</p>
+<div class="recommendations-container">
+    <header class="header">
+      <h2>Tus Recomendaciones</h2>
+      <a routerLink="/questionnaire" class="btn-back">Modificar respuestas</a>
+    </header>
+  
+    @if (isLoading()) {
+      <div class="state-container">
+        <div class="spinner"></div>
+        <p>Analizando la biblioteca y buscando coincidencias...</p>
+      </div>
+    } 
+    @else if (errorMessage()) {
+      <div class="state-container error">
+        <p>{{ errorMessage() }}</p>
+        <a routerLink="/questionnaire" class="btn-back">Intentar de nuevo</a>
+      </div>
+    } 
+    @else if (movies().length === 0) {
+      <div class="state-container">
+        <p>No encontramos películas que coincidan exactamente con tu tiempo y estado de ánimo actual. ¡Intenta ser un poco más flexible!</p>
+      </div>
+    } 
+    @else {
+      <div class="movies-grid">
+        @for (movie of movies(); track movie._id) {
+            <div class="movie-card">
+                <div class="poster-wrapper">
+                  <img [src]="movie.posterUrl" [alt]="movie.title">
+                </div>
+                <div class="movie-info">
+                  <h3>{{ movie.title }}</h3>
+                  <div class="meta">
+                    <span>⭐ {{ movie.ratingAvg }}</span>
+                    <span>⏱️ {{ movie.runtimeMinutes }} min</span>
+                  </div>
+                  <button class="btn-action">Guardar en Favoritos</button>
+                </div>
+              </div>
+        }
+      </div>
+    }
+  </div>

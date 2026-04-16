@@ -1,20 +1,21 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { QuestionnaireAnswers } from '../models/questionnaire';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Movie {
-  private baseUrl = 'https://api.themoviedb.org/3';
-  private headers = new HttpHeaders({
-    Authorization: `Bearer ${environment.tmdbToken}`
-  });
+  private http = inject(HttpClient);
+  
+  // Apuntamos al backend, no a TheMovieDB
+  private apiUrl = 'http://localhost:3000/api/movies';
 
-  constructor(private http: HttpClient) {}
-
-  getPopularMovies(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/movie/popular`, { headers: this.headers });
+  // POST para poder enviar el objeto JSON con las respuestas de forma segura
+  getRecommendations(answers: QuestionnaireAnswers): Observable<any> {
+    return this.http.post(`${this.apiUrl}/recommendations`, answers, {
+      withCredentials: true
+    });
   }
 }

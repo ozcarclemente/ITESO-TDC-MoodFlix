@@ -66,7 +66,7 @@ export class Questionnaire {
       // 4. Simulamos una carga de red de 800ms para probar la UX, luego redirigimos
       setTimeout(() => {
         this.router.navigate(['/recommendations']);
-      }, 2000);
+      }, 1000);
 
     } else {
       this.moodForm.markAllAsTouched();
