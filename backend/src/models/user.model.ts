@@ -8,6 +8,7 @@ export interface IUser extends Document {
     birthDate?: Date;
     role: 'USER' | 'CURATOR';
     lastQuestionnaireId?: mongoose.Types.ObjectId;
+    watchedMoviesRecommendation: boolean;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -19,6 +20,7 @@ const UserSchema = new Schema<IUser>(
         birthDate: { type: Date },
         role: { type: String, enum: ['USER', 'CURATOR'], default: 'USER' },
         lastQuestionnaireId: { type: Schema.Types.ObjectId, ref: 'Questionnaire' },
+        watchedMoviesRecommendation: { type: Boolean, default: false },
     },
     { timestamps: true }
 );
