@@ -1,45 +1,58 @@
 <div class="questionnaire-container">
-    <h2>¿Qué tienes ganas de ver hoy?</h2>
+  <h2>Cuéntanos cómo estás.</h2>
+  
+  <form [formGroup]="moodForm" (ngSubmit)="onSubmit()">
     
-    <form [formGroup]="moodForm" (ngSubmit)="onSubmit()">
-      
-      <fieldset>
-        <legend>1. ¿Cómo te sientes en este momento?</legend>
-        <div class="options-grid">
-          @for (mood of moodOptions; track mood) {
-            <label>
-              <input type="radio" formControlName="mood" [value]="mood">
-              {{ mood }}
-            </label>
-          }
-        </div>
-      </fieldset>
-  
-      <fieldset>
-        <legend>2. ¿Cuál es tu nivel de energía?</legend>
-        <div class="options-grid">
-          @for (energy of energyOptions; track energy) {
-            <label>
-              <input type="radio" formControlName="energyLevel" [value]="energy">
-              {{ energy }}
-            </label>
-          }
-        </div>
-      </fieldset>
-  
-      <fieldset>
-        <legend>3. ¿Cuánto tiempo tienes disponible?</legend>
-        <select formControlName="timeAvailable">
-          <option value="" disabled selected>Selecciona una opción</option>
-          @for (time of timeOptions; track time.value) {
-            <option [value]="time.value">{{ time.label }}</option>
-          }
-        </select>
-      </fieldset>
-  
-      <button type="submit" [disabled]="moodForm.invalid">
+    <fieldset>
+      <legend>1. ¿Cómo te sientes en este momento?</legend>
+      <div class="options-grid">
+        @for (mood of moodOptions; track mood.value) {
+          <label>
+            <input type="radio" formControlName="mood" [value]="mood.value">
+            {{ mood.label }}
+          </label>
+        }
+      </div>
+      @if (moodControl?.invalid && (moodControl?.dirty || moodControl?.touched)) {
+        <div class="error-message">Por favor, selecciona cómo te sientes.</div>
+      }
+    </fieldset>
+
+    <fieldset>
+      <legend>2. ¿Cuál es tu nivel de energía?</legend>
+      <div class="options-grid">
+        @for (energy of energyOptions; track energy.value) {
+          <label>
+            <input type="radio" formControlName="energyLevel" [value]="energy.value">
+            {{ energy.label }}
+          </label>
+        }
+      </div>
+      @if (energyControl?.invalid && (energyControl?.dirty || energyControl?.touched)) {
+        <div class="error-message">Por favor, selecciona tu nivel de energía.</div>
+      }
+    </fieldset>
+
+    <fieldset>
+      <legend>3. ¿Cuánto tiempo tienes disponible?</legend>
+      <select formControlName="timeAvailable">
+        <option value="" disabled selected>Selecciona una opción</option>
+        @for (time of timeOptions; track time.value) {
+          <option [value]="time.value">{{ time.label }}</option>
+        }
+      </select>
+      @if (timeControl?.invalid && (timeControl?.dirty || timeControl?.touched)) {
+        <div class="error-message">Por favor, indica de cuánto tiempo dispones.</div>
+      }
+    </fieldset>
+
+    <button type="submit" [disabled]="isSubmitting()">
+      @if (isSubmitting()) {
+        Analizando respuestas...
+      } @else {
         Descubrir películas
-      </button>
-      
-    </form>
-  </div>
+      }
+    </button>
+    
+  </form>
+</div>
