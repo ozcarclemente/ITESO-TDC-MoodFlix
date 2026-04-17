@@ -1,6 +1,7 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 
 export interface IPlaylist extends Document {
+    userId: Types.ObjectId; 
     name: string;
     description?: string;
     isPublic: boolean;
@@ -11,12 +12,18 @@ export interface IPlaylist extends Document {
 
 const playlistSchema = new Schema<IPlaylist>(
     {
-        name: { type: String, required: true, unique: true },
+        userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        name: { type: String, required: true },
         description: { type: String },
         isPublic: { type: Boolean, default: true },
         tags: [{ type: String }],
     },
     { timestamps: true }
 );
+
+
+// Un usuario no puede tener dos listas llamadas "Favoritos", 
+// pero diferentes usuarios sí pueden tener su propia lista "Favoritos".
+playlistSchema.index({ userId: 1, name: 1 }, { unique: true });
 
 export const Playlist = model<IPlaylist>('Playlist', playlistSchema);
