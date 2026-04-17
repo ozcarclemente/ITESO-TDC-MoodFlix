@@ -2,6 +2,8 @@ import { Response } from 'express';
 import { User } from '../models/user.model';
 import { UserWatched } from '../models/user-watched.model';
 import { AuthRequest } from '../middlewares/auth.middleware';
+import { Playlist } from '../models/playlist.model';
+import { PlaylistItem } from '../models/playlist-item.model';
 
 export const getProfile = async (req: AuthRequest, res: Response) => {
     try {
@@ -111,5 +113,95 @@ export const getRatings = async (req: AuthRequest, res: Response) => {
         res.json(formatted);
     } catch (err) {
         res.status(500).json({ message: 'Error fetching ratings' });
+    }
+};
+
+
+export const addFavorite = async (req: AuthRequest, res: Response) => {
+    try {
+        const userId = req.userId; 
+        const { movieId } = req.body;
+
+        if (!movieId) {
+            return res.status(400).json({ message: 'El ID de la película es requerido' });
+        }
+
+        // 1. Buscamos si el usuario ya tiene su lista de "Favoritos"
+        let playlist = await Playlist.findOne({ userId, name: 'Favoritos' });
+
+        // 2. Si no existe, la creamos al vuelo
+        if (!playlist) {
+            playlist = await Playlist.create({
+                userId,
+                name: 'Favoritos',
+                description: 'Mis películas guardadas',
+                isPublic: false
+            });
+        }
+
+        // 3. Intentamos agregar la película a la lista
+        try {
+            await PlaylistItem.create({
+                playlistId: playlist._id,
+                movieId: movieId
+            });
+            res.status(201).json({ message: 'Película agregada a favoritos con éxito' });
+        } catch (error: any) {
+            if (error.code === 11000) {
+                return res.status(400).json({ message: 'La película ya está en tu lista de favoritos' });
+            }
+            throw error;
+        }
+
+    } catch (err) {
+        console.error('Error al agregar a favoritos:', err);
+        res.status(500).json({ message: 'Error interno del servidor al guardar favorito' });
+    }
+};
+
+
+export const getFavorites = async (req: AuthRequest, res: Response) => {
+    try {
+        const userId = req.userId;
+
+        const playlist = await Playlist.findOne({ userId, name: 'Favoritos' });
+
+        if (!playlist) {
+            return res.json([]); 
+        }
+
+        const items = await PlaylistItem.find({ playlistId: playlist._id })
+            .populate('movieId')
+            .sort({ addedAt: -1 });
+
+        const movies = items.map(item => item.movieId);
+
+        res.json(movies);
+    } catch (err) {
+        console.error('Error al obtener favoritos:', err);
+        res.status(500).json({ message: 'Error interno del servidor al leer favoritos' });
+    }
+};
+
+export const deleteFavorite = async (req: AuthRequest, res: Response) => {
+    try {
+        const userId = req.userId;
+        const { movieId } = req.params; 
+
+        const playlist = await Playlist.findOne({ userId, name: 'Favoritos' });
+
+        if (!playlist) {
+            return res.status(404).json({ message: 'Lista de favoritos no encontrada' });
+        }
+
+        await PlaylistItem.findOneAndDelete({
+            playlistId: playlist._id,
+            movieId: movieId
+        });
+
+        res.json({ message: 'Película removida de tu lista' });
+    } catch (err) {
+        console.error('Error al eliminar de favoritos:', err);
+        res.status(500).json({ message: 'Error interno del servidor al eliminar favorito' });
     }
 };

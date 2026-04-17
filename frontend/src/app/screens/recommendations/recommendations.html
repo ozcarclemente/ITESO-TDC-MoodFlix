@@ -30,11 +30,28 @@
                 </div>
                 <div class="movie-info">
                   <h3>{{ movie.title }}</h3>
+                  
                   <div class="meta">
                     <span>⭐ {{ movie.ratingAvg }}</span>
                     <span>⏱️ {{ movie.runtimeMinutes }} min</span>
                   </div>
-                  <button class="btn-action">Guardar en Favoritos</button>
+                  
+                  <button 
+                    class="btn-action" 
+                    [class.saved]="savedMovieIds().includes(movie._id)"
+                    (click)="toggleFavorite(movie)"
+                    [disabled]="savingIds().includes(movie._id)"
+                  >
+                    @if (savingIds().includes(movie._id)) {
+                      Procesando...
+                    } @else if (savedMovieIds().includes(movie._id)) {
+                      <span class="text-default">Ya está en tu lista</span>
+                      <span class="text-hover">Quitar de la lista</span>
+                    } @else {
+                      Agregar a "Ver más tarde"
+                    }
+                  </button>
+                  
                 </div>
               </div>
         }

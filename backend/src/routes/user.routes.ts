@@ -10,12 +10,19 @@ import {
     deleteHistory,
     saveRating,
     getRatings,
+    addFavorite, 
+    getFavorites,
+    deleteFavorite
 } from '../controllers';
 
 const router = Router();
 
 router.get('/profile', authMiddleware, getProfile);
 router.patch('/profile', authMiddleware, updateProfile);
+
+router.post('/favorites', authMiddleware, addFavorite);
+router.get('/favorites', authMiddleware, getFavorites);
+router.delete('/favorites/:movieId', authMiddleware, deleteFavorite);
 
 router.get('/history', authMiddleware, getHistory);
 router.post('/history', authMiddleware, addHistory);

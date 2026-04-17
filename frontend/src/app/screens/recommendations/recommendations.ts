@@ -1,9 +1,9 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
-// Importamos nuestros servicios
 import { QuestionnaireStateService } from '../../core/services/questionnaire-state.service';
 import { Movie } from '../../core/services/movie';
+import { UserService } from '../../core/services/user.service'; 
 
 @Component({
   selector: 'app-recommendations',
@@ -16,46 +16,88 @@ export class Recommendations implements OnInit {
   private stateService = inject(QuestionnaireStateService);
   private movieService = inject(Movie);
   private router = inject(Router);
+  private userService = inject(UserService); 
+  
 
-  // Estados de la interfaz usando Signals (Requerimiento Sprint 2)
   movies = signal<any[]>([]);
   isLoading = signal<boolean>(true);
   errorMessage = signal<string | null>(null);
+  savingIds = signal<string[]>([]);
+  savedMovieIds = signal<string[]>([]);
 
   ngOnInit(): void {
-    // 1. Leemos las respuestas que guardamos en la bóveda (sessionStorage)
     const answers = this.stateService.answers();
-
     if (!answers) {
-      // Protección: Si alguien entra a /recommendations sin contestar, lo regresamos.
       console.warn('No hay respuestas guardadas. Redirigiendo al cuestionario...');
       this.router.navigate(['/questionnaire']);
       return;
     }
-
-    // 2. Si tenemos las respuestas, le pedimos las películas al backend
     this.fetchRecommendations(answers);
+    this.loadUserSavedMovies();
   }
 
+
+  private loadUserSavedMovies(): void {
+    this.userService.getFavorites().subscribe({
+      next: (movies) => {
+        // Extraemos solo los IDs para hacer validaciones ultrarrápidas en el HTML
+        const ids = movies.map((m: any) => m._id);
+        this.savedMovieIds.set(ids);
+      },
+      error: (err) => console.error('Error cargando historial del usuario', err)
+    });
+  }
+
+
   private fetchRecommendations(answers: any): void {
-    // Aseguramos que la UI muestre que está cargando
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    // Consumimos el endpoint POST que acabas de arreglar en el backend
     this.movieService.getRecommendations(answers).subscribe({
       next: (response) => {
-        // ÉXITO: Guardamos las películas y quitamos la pantalla de carga
-        console.log('Películas recibidas del backend:', response);
         this.movies.set(response);
         this.isLoading.set(false);
       },
       error: (err) => {
-        // ERROR: El servidor falló. Mostramos un mensaje amigable.
         console.error('Error de la API:', err);
         this.errorMessage.set('Tuvimos un problema al conectar con el servidor. Por favor, intenta de nuevo.');
         this.isLoading.set(false);
       }
     });
+  }
+
+  toggleFavorite(movie: any): void {
+    const movieId = movie._id;
+    const isSaved = this.savedMovieIds().includes(movieId);
+
+    // Bloqueamos el botón en la UI para evitar clics dobles
+    this.savingIds.update(ids => [...ids, movieId]);
+
+    if (isSaved) {
+      // Si ya está guardada, ejecutamos la eliminación
+      this.userService.removeFavorite(movieId).subscribe({
+        next: () => {
+          // Quitamos el ID de ambas listas para desbloquear y actualizar el estado visual
+          this.savedMovieIds.update(ids => ids.filter(id => id !== movieId));
+          this.savingIds.update(ids => ids.filter(id => id !== movieId));
+        },
+        error: (err) => {
+          console.error('Error al eliminar:', err);
+          this.savingIds.update(ids => ids.filter(id => id !== movieId));
+        }
+      });
+    } else {
+      // Si no está guardada, ejecutamos la creación (código que ya tenías)
+      this.userService.addFavorite(movieId).subscribe({
+        next: () => {
+          this.savedMovieIds.update(ids => [...ids, movieId]);
+          this.savingIds.update(ids => ids.filter(id => id !== movieId));
+        },
+        error: (err) => {
+          console.error('Error al guardar:', err);
+          this.savingIds.update(ids => ids.filter(id => id !== movieId));
+        }
+      });
+    }
   }
 }
