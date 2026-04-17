@@ -1,1 +1,47 @@
-<p>home works!</p>
+<div class="home-container">
+    <header class="home-header">
+      <h1>Mi Biblioteca</h1>
+      <p>Tienes {{ savedMovies().length }} películas pendientes por ver.</p>
+    </header>
+  
+    <section class="watch-later-section">
+      <div class="section-title">
+        <h2>Ver más tarde</h2>
+      </div>
+  
+      @if (isLoading()) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Cargando tu lista...</p>
+        </div>
+      } 
+      @else if (error()) {
+        <div class="empty-state error">
+          <p>{{ error() }}</p>
+        </div>
+      }
+      @else if (savedMovies().length === 0) {
+        <div class="empty-state">
+          <p>Tu lista está vacía.</p>
+          <a routerLink="/questionnaire" class="btn-discover">Descubrir películas</a>
+        </div>
+      } 
+      @else {
+        <div class="movies-grid">
+          @for (movie of savedMovies(); track movie._id) {
+            <div class="movie-card">
+              <div class="poster-wrapper">
+                <img [src]="movie.posterUrl" [alt]="movie.title">
+              </div>
+              <div class="movie-info">
+                <h3>{{ movie.title }}</h3>
+                <button (click)="removeFromList(movie._id)" class="btn-action remove">
+                  Quitar de la lista
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  </div>

@@ -127,13 +127,13 @@ export const addFavorite = async (req: AuthRequest, res: Response) => {
         }
 
         // 1. Buscamos si el usuario ya tiene su lista de "Favoritos"
-        let playlist = await Playlist.findOne({ userId, name: 'Favoritos' });
+        let playlist = await Playlist.findOne({ userId, name: 'Ver más tarde' });
 
         // 2. Si no existe, la creamos al vuelo
         if (!playlist) {
             playlist = await Playlist.create({
                 userId,
-                name: 'Favoritos',
+                name: 'Ver más tarde',
                 description: 'Mis películas guardadas',
                 isPublic: false
             });
@@ -164,7 +164,7 @@ export const getFavorites = async (req: AuthRequest, res: Response) => {
     try {
         const userId = req.userId;
 
-        const playlist = await Playlist.findOne({ userId, name: 'Favoritos' });
+        const playlist = await Playlist.findOne({ userId, name: 'Ver más tarde' });
 
         if (!playlist) {
             return res.json([]); 
@@ -178,8 +178,8 @@ export const getFavorites = async (req: AuthRequest, res: Response) => {
 
         res.json(movies);
     } catch (err) {
-        console.error('Error al obtener favoritos:', err);
-        res.status(500).json({ message: 'Error interno del servidor al leer favoritos' });
+        console.error('Error al obtener lista "Ver más tarde"', err);
+        res.status(500).json({ message: 'Error interno del servidor al leer "Ver más tarde"' });
     }
 };
 
@@ -188,10 +188,10 @@ export const deleteFavorite = async (req: AuthRequest, res: Response) => {
         const userId = req.userId;
         const { movieId } = req.params; 
 
-        const playlist = await Playlist.findOne({ userId, name: 'Favoritos' });
+        const playlist = await Playlist.findOne({ userId, name: 'Ver más tarde' });
 
         if (!playlist) {
-            return res.status(404).json({ message: 'Lista de favoritos no encontrada' });
+            return res.status(404).json({ message: 'Lista de "Ver más tarde" no encontrada' });
         }
 
         await PlaylistItem.findOneAndDelete({
@@ -201,7 +201,7 @@ export const deleteFavorite = async (req: AuthRequest, res: Response) => {
 
         res.json({ message: 'Película removida de tu lista' });
     } catch (err) {
-        console.error('Error al eliminar de favoritos:', err);
-        res.status(500).json({ message: 'Error interno del servidor al eliminar favorito' });
+        console.error('Error al eliminar de "Ver más tarde":', err);
+        res.status(500).json({ message: 'Error interno del servidor al eliminar de "Ver más tarde"' });
     }
 };

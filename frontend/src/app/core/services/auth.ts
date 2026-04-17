@@ -26,7 +26,8 @@ export class Auth {
       method: 'POST',
       credentials: 'include', // necesario para mandar la cookie
     }).finally(() => {
-      sessionStorage.removeItem('authenticated');
+      sessionStorage.clear();
+      localStorage.clear();
       window.location.href = '/auth/login';
     });
   }
