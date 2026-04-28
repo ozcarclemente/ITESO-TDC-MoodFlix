@@ -1,0 +1,43 @@
+<div class="movie-detail">
+  @if (loading()) {
+    <div class="loading">
+      <p>Cargando detalles de la película...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else if (movie()) {
+    <div class="movie-header">
+      <div class="poster-section">
+        <img [src]="movie().posterUrl" [alt]="movie().title" class="poster" />
+      </div>
+      <div class="info-section">
+        <h1>{{ movie().title }}</h1>
+        <div class="meta-row">
+          <span class="meta-item">⭐ {{ movie().ratingAvg }}</span>
+          <span class="meta-item">⏱️ {{ movie().runtimeMinutes }} min</span>
+          @if (movie().releaseYear) {
+            <span class="meta-item">📅 {{ movie().releaseYear }}</span>
+          }
+          @if (movie().ageRating) {
+            <span class="meta-item rating-badge">{{ movie().ageRating }}</span>
+          }
+        </div>
+        @if (movie().genres && movie().genres.length > 0) {
+          <div class="genres">
+            @for (genre of movie().genres; track genre) {
+              <span class="genre-tag">{{ genre }}</span>
+            }
+          </div>
+        }
+        <p class="overview">{{ movie().overview }}</p>
+        <a [routerLink]="['chat']" class="btn-chat">Ir al chat</a>
+      </div>
+    </div>
+
+    <div class="chat-section">
+      <router-outlet />
+    </div>
+  }
+</div>

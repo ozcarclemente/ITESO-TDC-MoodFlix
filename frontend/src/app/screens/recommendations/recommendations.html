@@ -1,60 +1,62 @@
 <div class="recommendations-container">
-    <header class="header">
-      <h2>Tus Recomendaciones</h2>
-      <a routerLink="/questionnaire" class="btn-back">Modificar respuestas</a>
-    </header>
-  
-    @if (isLoading()) {
-      <div class="state-container">
-        <div class="spinner"></div>
-        <p>Analizando la biblioteca y buscando coincidencias...</p>
-      </div>
-    } 
-    @else if (errorMessage()) {
-      <div class="state-container error">
-        <p>{{ errorMessage() }}</p>
-        <a routerLink="/questionnaire" class="btn-back">Intentar de nuevo</a>
-      </div>
-    } 
-    @else if (movies().length === 0) {
-      <div class="state-container">
-        <p>No encontramos películas que coincidan exactamente con tu tiempo y estado de ánimo actual. ¡Intenta ser un poco más flexible!</p>
-      </div>
-    } 
-    @else {
-      <div class="movies-grid">
-        @for (movie of movies(); track movie._id) {
-            <div class="movie-card">
-                <div class="poster-wrapper">
-                  <img [src]="movie.posterUrl" [alt]="movie.title">
-                </div>
-                <div class="movie-info">
-                  <h3>{{ movie.title }}</h3>
-                  
-                  <div class="meta">
-                    <span>⭐ {{ movie.ratingAvg }}</span>
-                    <span>⏱️ {{ movie.runtimeMinutes }} min</span>
-                  </div>
-                  
-                  <button 
-                    class="btn-action" 
-                    [class.saved]="savedMovieIds().includes(movie._id)"
-                    (click)="toggleFavorite(movie)"
-                    [disabled]="savingIds().includes(movie._id)"
-                  >
-                    @if (savingIds().includes(movie._id)) {
-                      Procesando...
-                    } @else if (savedMovieIds().includes(movie._id)) {
-                      <span class="text-default">Ya está en tu lista</span>
-                      <span class="text-hover">Quitar de la lista</span>
-                    } @else {
-                      Agregar a "Ver más tarde"
-                    }
-                  </button>
-                  
-                </div>
-              </div>
-        }
-      </div>
-    }
-  </div>
+  <header class="header">
+    <h2>Tus Recomendaciones</h2>
+    <a routerLink="/questionnaire" class="btn-back">Modificar respuestas</a>
+  </header>
+
+  @if (isLoading()) {
+    <div class="state-container">
+      <div class="spinner"></div>
+      <p>Analizando la biblioteca y buscando coincidencias...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="state-container error">
+      <p>{{ errorMessage() }}</p>
+      <a routerLink="/questionnaire" class="btn-back">Intentar de nuevo</a>
+    </div>
+  } @else if (movies().length === 0) {
+    <div class="state-container">
+      <p>
+        No encontramos películas que coincidan exactamente con tu tiempo y estado de ánimo actual.
+        ¡Intenta ser un poco más flexible!
+      </p>
+    </div>
+  } @else {
+    <div class="movies-grid">
+      @for (movie of movies(); track movie._id) {
+        <div class="movie-card">
+          <div class="poster-wrapper">
+            <img [src]="movie.posterUrl" [alt]="movie.title" />
+          </div>
+          <div class="movie-info">
+            <h3>{{ movie.title }}</h3>
+
+            <div class="meta">
+              <span>⭐ {{ movie.ratingAvg | number: '1.2-2' }}</span>
+              <span>⏱️ {{ movie.runtimeMinutes }} min</span>
+            </div>
+
+            <div class="movie-actions">
+              <button
+                class="btn-action"
+                [class.saved]="savedMovieIds().includes(movie._id)"
+                (click)="toggleFavorite(movie)"
+                [disabled]="savingIds().includes(movie._id)"
+              >
+                @if (savingIds().includes(movie._id)) {
+                  Procesando...
+                } @else if (savedMovieIds().includes(movie._id)) {
+                  <span class="text-default">Ya está en tu lista</span>
+                  <span class="text-hover">Quitar de la lista</span>
+                } @else {
+                  Agregar a "Ver más tarde"
+                }
+              </button>
+              <a [routerLink]="['/movie', movie._id]" class="btn-detail">Ver detalles</a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

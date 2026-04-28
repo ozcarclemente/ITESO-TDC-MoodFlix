@@ -1,0 +1,71 @@
+@if (isLoading()) {
+  <div class="profile-container">
+    <p class="loading-text">Cargando perfil…</p>
+  </div>
+} @else {
+  <div class="profile-container">
+    <h2>Mi Perfil</h2>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <div class="photo-section">
+        <div class="photo-display">
+          @if (profileForm.get('photoUrl')?.value) {
+            <img [src]="profileForm.get('photoUrl')?.value" alt="Foto de perfil" />
+          } @else {
+            <div class="photo-placeholder">
+              <span>📷</span>
+            </div>
+          }
+        </div>
+        <div class="field-group">
+          <label for="photoUrl">URL de foto</label>
+          <input
+            id="photoUrl"
+            type="text"
+            formControlName="photoUrl"
+            placeholder="https://..."
+          />
+        </div>
+      </div>
+
+      <div class="email-display">
+        <span class="field-label">Correo</span>
+        <span class="field-value">{{ email() }}</span>
+      </div>
+
+      <div class="field-group">
+        <label for="name">Nombre</label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="Tu nombre"
+        />
+        @if (nameControl?.invalid && (nameControl?.dirty || nameControl?.touched)) {
+          <span class="error-message">El nombre es requerido.</span>
+        }
+      </div>
+
+      <div class="field-group">
+        <label for="birthDate">Fecha de nacimiento</label>
+        <input
+          id="birthDate"
+          type="date"
+          formControlName="birthDate"
+        />
+      </div>
+
+      @if (saveSuccess()) {
+        <p class="success-message">¡Cambios guardados correctamente!</p>
+      }
+
+      @if (errorMessage()) {
+        <p class="error-message">{{ errorMessage() }}</p>
+      }
+
+      <button type="submit" [disabled]="isSaving()">
+        @if (isSaving()) { Guardando… } @else { Guardar cambios }
+      </button>
+    </form>
+  </div>
+}

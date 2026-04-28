@@ -1,53 +1,104 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { UserService } from '../../core/services/user.service';
+import { FormsModule } from '@angular/forms';
+import { Movie } from '../../core/services/movie';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, FormsModule, DecimalPipe],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
 export class Home implements OnInit {
-  private userService = inject(UserService);
+  private movieService = inject(Movie);
 
-  savedMovies = signal<any[]>([]);
+  movies = signal<any[]>([]);
   isLoading = signal(true);
   error = signal<string | null>(null);
+  currentPage = signal(1);
+  totalPages = signal(1);
+  selectedGenre = signal('');
+  selectedMood = signal('');
+  sortBy = signal<'title' | 'rating' | 'releaseDate'>('title');
 
   ngOnInit(): void {
-    this.fetchSavedMovies();
+    this.fetchMovies();
   }
 
-  fetchSavedMovies(): void {
+  fetchMovies(): void {
     this.isLoading.set(true);
-    this.userService.getFavorites().subscribe({
-      next: (movies) => {
-        this.savedMovies.set(movies);
+    const params: any = { page: this.currentPage(), limit: 20, sort: this.sortBy() };
+    if (this.selectedGenre()) params.genre = this.selectedGenre();
+    if (this.selectedMood()) params.mood = this.selectedMood();
+
+    this.movieService.getAllMovies(params).subscribe({
+      next: (response) => {
+        this.movies.set(response.movies);
+        this.totalPages.set(response.totalPages);
         this.isLoading.set(false);
+        this.error.set(null);
       },
       error: (err) => {
-        console.error('Error cargando la lista:', err);
-        this.error.set('No pudimos cargar tu lista de pendientes.');
+        console.error('Error cargando películas:', err);
+        this.error.set('No pudimos cargar las películas. Intenta de nuevo.');
         this.isLoading.set(false);
       }
     });
   }
 
-  removeFromList(movieId: string): void {
-    //  quitamos la película de la vista inmediatamente
-    // para que la interfaz se sienta ultrarrápida, y luego hacemos la petición.
-    const currentMovies = this.savedMovies();
-    this.savedMovies.update(movies => movies.filter(m => m._id !== movieId));
+  onFilterChange(): void {
+    this.currentPage.set(1);
+    this.fetchMovies();
+  }
 
-    this.userService.removeFavorite(movieId).subscribe({
-      error: (err) => {
-        console.error('Error al eliminar:', err);
-        // Si falla el servidor, regresamos la película a la pantalla
-        this.savedMovies.set(currentMovies);
-        alert('Ocurrió un error al quitar la película de tu lista.');
+  nextPage(): void {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.update(p => p + 1);
+      this.fetchMovies();
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage() > 1) {
+      this.currentPage.update(p => p - 1);
+      this.fetchMovies();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages()) {
+      this.currentPage.set(page);
+      this.fetchMovies();
+    }
+  }
+
+  getPageNumbers(): number[] {
+    const pages = [];
+    const total = this.totalPages();
+    const current = this.currentPage();
+    const maxVisible = 5;
+
+    if (total <= maxVisible) {
+      for (let i = 1; i <= total; i++) {
+        pages.push(i);
       }
-    });
+    } else {
+      if (current <= 3) {
+        for (let i = 1; i <= 5; i++) pages.push(i);
+      } else if (current >= total - 2) {
+        for (let i = total - 4; i <= total; i++) pages.push(i);
+      } else {
+        for (let i = current - 2; i <= current + 2; i++) pages.push(i);
+      }
+    }
+    return pages;
+  }
+
+  resetFilters(): void {
+    this.selectedGenre.set('');
+    this.selectedMood.set('');
+    this.onFilterChange();
   }
 }

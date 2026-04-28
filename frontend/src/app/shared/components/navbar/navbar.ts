@@ -1,6 +1,7 @@
-import { Component, inject, signal, HostListener, ElementRef } from '@angular/core';
+import { Component, inject, signal, HostListener, ElementRef, OnInit } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,13 +10,34 @@ import { Auth } from '../../../core/services/auth';
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss'
 })
-export class Navbar {
+export class Navbar implements OnInit {
   private authService = inject(Auth);
   private router = inject(Router);
   private el = inject(ElementRef);
+  private userService = inject(UserService);
 
   avatarDropdownOpen = signal(false);
   menuOpen = signal(false);
+  userPhoto = signal<string | null>(null);
+
+  ngOnInit(): void {
+    if (this.isAuthenticated) {
+      this.userService.userPhoto$.subscribe({
+        next: (photoUrl) => {
+          this.userPhoto.set(photoUrl);
+        },
+      });
+
+      this.userService.getProfile().subscribe({
+        next: (user) => {
+          this.userService.setUserPhoto(user.photoUrl ?? null);
+        },
+        error: () => {
+          this.userService.setUserPhoto(null);
+        },
+      });
+    }
+  }
 
   get isAuthenticated(): boolean {
     return this.authService.isAuthenticated();

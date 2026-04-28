@@ -1,47 +1,119 @@
 <div class="home-container">
     <header class="home-header">
-      <h1>Mi Biblioteca</h1>
-      <p>Tienes {{ savedMovies().length }} películas pendientes por ver.</p>
+      <h1>Explorar Películas</h1>
+      <p>Descubre películas basadas en tus preferencias.</p>
     </header>
-  
-    <section class="watch-later-section">
-      <div class="section-title">
-        <h2>Ver más tarde</h2>
+
+    <section class="filters-section">
+      <div class="filters-bar">
+        <div class="filter-group">
+          <label for="genre-select">Género:</label>
+          <select id="genre-select" [(ngModel)]="selectedGenre" (change)="onFilterChange()" class="filter-select">
+            <option value="">Todos</option>
+            <option value="Action">Acción</option>
+            <option value="Adventure">Aventura</option>
+            <option value="Animation">Animación</option>
+            <option value="Comedy">Comedia</option>
+            <option value="Crime">Crimen</option>
+            <option value="Documentary">Documental</option>
+            <option value="Drama">Drama</option>
+            <option value="Family">Familia</option>
+            <option value="Fantasy">Fantasía</option>
+            <option value="History">Historia</option>
+            <option value="Horror">Terror</option>
+            <option value="Music">Música</option>
+            <option value="Mystery">Misterio</option>
+            <option value="Romance">Romance</option>
+            <option value="Science Fiction">Ciencia Ficción</option>
+            <option value="Thriller">Suspenso</option>
+            <option value="War">Guerra</option>
+            <option value="Western">Oeste</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="mood-select">Estado de ánimo:</label>
+          <select id="mood-select" [(ngModel)]="selectedMood" (change)="onFilterChange()" class="filter-select">
+            <option value="">Todos</option>
+            <option value="happy">Feliz</option>
+            <option value="sad">Triste</option>
+            <option value="tense">Tenso</option>
+            <option value="excited">Emocionado</option>
+            <option value="romantic">Romántico</option>
+            <option value="bored">Aburrido</option>
+            <option value="nostalgic">Nostálgico</option>
+            <option value="curious">Curioso</option>
+          </select>
+        </div>
+
+        <button (click)="resetFilters()" class="btn-reset">Limpiar filtros</button>
       </div>
-  
+    </section>
+
+    <section class="movies-section">
       @if (isLoading()) {
         <div class="loading-state">
           <div class="spinner"></div>
-          <p>Cargando tu lista...</p>
+          <p>Cargando películas...</p>
         </div>
-      } 
+      }
       @else if (error()) {
         <div class="empty-state error">
           <p>{{ error() }}</p>
         </div>
       }
-      @else if (savedMovies().length === 0) {
+      @else if (movies().length === 0) {
         <div class="empty-state">
-          <p>Tu lista está vacía.</p>
-          <a routerLink="/questionnaire" class="btn-discover">Descubrir películas</a>
+          <p>No se encontraron películas con esos filtros.</p>
+          <button (click)="resetFilters()" class="btn-discover">Limpiar filtros</button>
         </div>
-      } 
+      }
       @else {
         <div class="movies-grid">
-          @for (movie of savedMovies(); track movie._id) {
+          @for (movie of movies(); track movie._id) {
             <div class="movie-card">
               <div class="poster-wrapper">
                 <img [src]="movie.posterUrl" [alt]="movie.title">
               </div>
               <div class="movie-info">
                 <h3>{{ movie.title }}</h3>
-                <button (click)="removeFromList(movie._id)" class="btn-action remove">
-                  Quitar de la lista
-                </button>
+                <div class="meta">
+                  <span>⭐ {{ movie.ratingAvg | number: '1.2-2' }}</span>
+                  <span>⏱️ {{ movie.runtimeMinutes }} min</span>
+                </div>
+                <div class="movie-actions">
+                  <a [routerLink]="['/movie', movie._id]" class="btn-action detail">
+                    Ver detalles
+                  </a>
+                </div>
               </div>
             </div>
           }
         </div>
+
+        @if (totalPages() > 1) {
+          <div class="pagination">
+            <button (click)="prevPage()" [disabled]="currentPage() === 1" class="btn-pagination prev-btn">
+              ← Anterior
+            </button>
+
+            <div class="page-numbers">
+              @for (page of getPageNumbers(); track page) {
+                <button
+                  (click)="goToPage(page)"
+                  [class.active]="page === currentPage()"
+                  class="page-btn"
+                >
+                  {{ page }}
+                </button>
+              }
+            </div>
+
+            <button (click)="nextPage()" [disabled]="currentPage() === totalPages()" class="btn-pagination next-btn">
+              Siguiente →
+            </button>
+          </div>
+        }
       }
     </section>
   </div>

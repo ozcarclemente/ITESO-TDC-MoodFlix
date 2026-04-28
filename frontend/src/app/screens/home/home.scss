@@ -53,19 +53,56 @@
     h3 {
       font-size: 1rem;
       color: #fff;
-      margin: 0 0 $space-4 0;
+      margin: 0 0 $space-3 0;
     }
 
-    .btn-action.remove {
+    .meta {
+      display: flex;
+      gap: $space-2;
+      font-size: 0.75rem;
+      color: $color-text-muted;
+      margin-bottom: $space-3;
+
+      span {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+    }
+
+    .movie-actions {
+      display: flex;
+      flex-direction: column;
+      gap: $space-2;
       margin-top: auto;
-      width: 100%;
+    }
+
+    .btn-action {
       padding: $space-2;
-      background: rgba(224, 85, 85, 0.1);
-      color: #ef4444;
-      border: 1px solid #ef4444;
       border-radius: $radius-md;
       cursor: pointer;
       transition: all 0.2s;
+      width: 100%;
+      text-decoration: none;
+      text-align: center;
+      display: block;
+      border: 1px solid;
+
+      &.detail {
+        background: transparent;
+        color: #6366f1;
+        border-color: #6366f1;
+
+        &:hover {
+          background: rgba(99, 102, 241, 0.1);
+        }
+      }
+    }
+
+    .btn-action.remove {
+      background: rgba(224, 85, 85, 0.1);
+      color: #ef4444;
+      border-color: #ef4444;
 
       &:hover {
         background: #ef4444;
@@ -73,6 +110,74 @@
       }
     }
   }
+}
+
+.filters-section {
+  margin-bottom: $space-8;
+}
+
+.filters-bar {
+  display: flex;
+  gap: $space-4;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  padding: $space-4;
+  background: $color-bg-surface;
+  border-radius: $radius-lg;
+  border: 1px solid $color-border-subtle;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+
+  label {
+    font-size: 0.875rem;
+    color: $color-text-muted;
+    font-weight: 500;
+  }
+
+  .filter-select {
+    padding: $space-2 $space-3;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid #6366f1;
+    color: #fff;
+    border-radius: $radius-md;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: #818cf8;
+      background: rgba(99, 102, 241, 0.15);
+    }
+
+    option {
+      background: #1a1b2e;
+      color: #fff;
+    }
+  }
+}
+
+.btn-reset {
+  padding: $space-2 $space-4;
+  background: transparent;
+  color: $color-text-muted;
+  border: 1px solid $color-border-subtle;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: #fff;
+    color: #fff;
+  }
+}
+
+.movies-section {
+  margin-top: $space-8;
 }
 
 .empty-state {
@@ -91,6 +196,78 @@
     text-decoration: none;
     border-radius: $radius-md;
     font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #fef08a;
+    }
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: $space-3;
+  margin-top: $space-8;
+  padding: $space-4;
+  flex-wrap: wrap;
+
+  .btn-pagination {
+    padding: $space-2 $space-3;
+    background: $color-accent;
+    color: #000;
+    border: none;
+    border-radius: $radius-md;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+
+    &:hover:not(:disabled) {
+      background: #fef08a;
+      transform: scale(1.05);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .page-numbers {
+    display: flex;
+    gap: $space-2;
+    align-items: center;
+
+    .page-btn {
+      padding: $space-2 $space-3;
+      background: transparent;
+      border: 1px solid $color-border-subtle;
+      color: $color-text-muted;
+      border-radius: $radius-md;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+      font-size: 0.875rem;
+      min-width: 36px;
+      text-align: center;
+
+      &:hover {
+        border-color: $color-accent;
+        color: $color-accent;
+        background: rgba(254, 240, 138, 0.1);
+      }
+
+      &.active {
+        background: $color-accent;
+        color: #000;
+        border-color: $color-accent;
+        font-weight: 700;
+      }
+    }
   }
 }
 

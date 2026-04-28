@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +8,8 @@ import { Observable } from 'rxjs';
 export class UserService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:3000/api/user';
+  private userPhotoSubject = new BehaviorSubject<string | null>(null);
+  userPhoto$ = this.userPhotoSubject.asObservable();
 
   // CREATE: Enviar el ID de la película para guardarla en la lista de favoritos
   addFavorite(movieId: string): Observable<any> {
@@ -28,5 +30,27 @@ export class UserService {
     return this.http.delete(`${this.apiUrl}/favorites/${movieId}`, {
       withCredentials: true
     });
+  }
+
+  getMe(): Observable<{ id: string; name: string; email: string }> {
+    return this.http.get<{ id: string; name: string; email: string }>(
+      `${this.apiUrl}/me`,
+      { withCredentials: true }
+    );
+  }
+
+  getProfile(): Observable<{ name: string; email: string; photoUrl?: string; birthDate?: string }> {
+    return this.http.get<{ name: string; email: string; photoUrl?: string; birthDate?: string }>(
+      `${this.apiUrl}/profile`,
+      { withCredentials: true }
+    );
+  }
+
+  updateProfile(data: { name?: string; photoUrl?: string; birthDate?: string }): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/profile`, data, { withCredentials: true });
+  }
+
+  setUserPhoto(photoUrl: string | null): void {
+    this.userPhotoSubject.next(photoUrl);
   }
 }

@@ -1,0 +1,239 @@
+@use '../../../../styles.scss' as *;
+
+.chat-room {
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  border: 1px solid $color-border-subtle;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  background: $color-bg-surface;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: $color-text-muted;
+}
+
+.chat-header {
+  padding: $space-3 $space-4;
+  border-bottom: 1px solid $color-border-subtle;
+  background: $color-bg-subtle;
+
+  .status {
+    font-size: $text-xs;
+    color: $color-text-muted;
+    display: flex;
+    align-items: center;
+    gap: $space-1;
+
+    &.online {
+      color: $color-success;
+    }
+  }
+}
+
+.messages-list-wrapper {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+
+  .scroll-to-bottom {
+    position: absolute;
+    bottom: $space-3;
+    left: 50%;
+    transform: translateX(-50%);
+    background: $color-accent;
+    color: $color-bg;
+    border: none;
+    border-radius: $radius-lg;
+    padding: $space-2 $space-4;
+    font-size: $text-xs;
+    font-family: $font-body;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+    z-index: 10;
+
+    &:hover {
+      background: $color-accent-dim;
+      transform: translateX(-50%) translateY(-1px);
+    }
+  }
+}
+
+.messages-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+
+  .empty-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: $color-text-muted;
+    font-size: $text-sm;
+  }
+
+  .message {
+    display: flex;
+    gap: $space-2;
+
+    .message-content {
+      display: flex;
+      flex-direction: column;
+      gap: $space-1;
+      padding: $space-3;
+      background: $color-bg;
+      border-radius: $radius-md;
+      border-left: 3px solid $color-accent;
+      flex: 1;
+
+      .username-row {
+        display: flex;
+        align-items: center;
+        gap: $space-2;
+
+        .message-avatar {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 1px solid $color-accent;
+          flex-shrink: 0;
+        }
+
+        .message-avatar-placeholder {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          border: 1px solid $color-accent;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+          flex-shrink: 0;
+          background: rgba($color-accent, 0.1);
+        }
+
+        .username {
+          font-weight: 600;
+          font-size: $text-xs;
+          color: $color-accent;
+        }
+      }
+
+      .content {
+        font-size: $text-sm;
+        color: $color-text;
+        word-wrap: break-word;
+        line-height: 1.4;
+      }
+
+      .time {
+        font-size: $text-xs;
+        color: $color-text-muted;
+        margin-top: $space-1;
+      }
+    }
+  }
+}
+
+.chat-input-wrapper {
+  padding: $space-3 $space-4;
+  border-top: 1px solid $color-border-subtle;
+  background: $color-bg-subtle;
+
+  .chat-input {
+    display: flex;
+    gap: $space-2;
+
+    input {
+      flex: 1;
+      padding: $space-2 $space-3;
+      border: 1px solid $color-border-subtle;
+      border-radius: $radius-md;
+      font-size: $text-sm;
+      font-family: $font-body;
+      background: $color-bg;
+      color: $color-text;
+      outline: none;
+      transition: border-color 0.2s;
+
+      &::placeholder {
+        color: $color-text-muted;
+      }
+
+      &:focus {
+        border-color: $color-accent;
+      }
+
+      &:disabled {
+        background: $color-bg-subtle;
+        color: $color-text-disabled;
+        cursor: not-allowed;
+      }
+    }
+
+    .btn-send {
+      padding: $space-2 $space-4;
+      background: $color-accent;
+      color: $color-bg;
+      border: none;
+      border-radius: $radius-md;
+      font-weight: 600;
+      font-family: $font-body;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover:not(:disabled) {
+        background: $color-accent-dim;
+      }
+
+      &:disabled {
+        background: $color-text-disabled;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .char-count {
+    display: block;
+    font-size: $text-xs;
+    color: $color-text-muted;
+    margin-top: $space-2;
+  }
+}
+
+@include md {
+  .chat-room {
+    height: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  .chat-room {
+    height: 400px;
+  }
+
+  .messages-list {
+    padding: $space-3;
+  }
+
+  .chat-input-wrapper {
+    .chat-input input {
+      font-size: 16px;
+    }
+  }
+}

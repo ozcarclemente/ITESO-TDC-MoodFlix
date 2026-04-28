@@ -18,13 +18,17 @@
   <!-- Desktop links -->
   <div class="nav-links">
     @if (isAuthenticated) {
-    <a routerLink="/home" class="nav-item">Inicio</a>
-    <a routerLink="/lists" class="nav-item">Ver más tarde</a>
+    <a routerLink="/home" class="nav-item">Explorar</a>
+    <a routerLink="/library" class="nav-item">Mi Biblioteca</a>
     <a routerLink="/questionnaire" class="nav-item">Mi cuestionario</a>
     <!-- Logica para mostrar el avatar y dropdown -->
     <div class="nav-avatar-wrapper" [class.is-open]="avatarDropdownOpen()" (click)="toggleAvatarDropdown()">
       <div class="nav-avatar">
-        <span class="avatar-icon">👤</span>
+        @if (userPhoto()) {
+          <img [src]="userPhoto()" alt="Avatar de usuario" class="avatar-image" />
+        } @else {
+          <span class="avatar-icon">👤</span>
+        }
       </div>
       <div class="avatar-dropdown">
         <a routerLink="/profile" class="dropdown-item">Mi perfil</a>
@@ -49,8 +53,8 @@
 @if (menuOpen()) {
 <div class="mobile-drawer">
   @if (isAuthenticated) {
-  <a routerLink="/home" class="drawer-item" (click)="closeMenu()">Inicio</a>
-  <a routerLink="/lists" class="drawer-item" (click)="closeMenu()">Mis listas</a>
+  <a routerLink="/home" class="drawer-item" (click)="closeMenu()">Explorar</a>
+  <a routerLink="/library" class="drawer-item" (click)="closeMenu()">Mi Biblioteca</a>
   <a routerLink="/questionnaire" class="drawer-item" (click)="closeMenu()">Mi cuestionario</a>
   <div class="drawer-footer">
     <a routerLink="/profile" class="drawer-item" (click)="closeMenu()">Mi perfil</a>

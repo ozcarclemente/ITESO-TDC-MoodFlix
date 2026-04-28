@@ -13,9 +13,21 @@ export const routes: Routes = [
       import('./screens/home/home').then(m => m.Home),
   },
   {
+    path: 'library',
+    loadComponent: () =>
+      import('./screens/library/library').then(m => m.Library),
+    canActivate: [authGuard],
+  },
+  {
     path: 'auth/login',
     loadComponent: () =>
       import('./screens/auth/login/login').then(m => m.Login),
+  },
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('./screens/profile/profile').then(m => m.Profile),
+    canActivate: [authGuard],
   },
   {
     path: 'auth/callback',
@@ -33,6 +45,19 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./screens/recommendations/recommendations').then(m => m.Recommendations),
     canActivate: [authGuard],
+  },
+  {
+    path: 'movie/:id',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./screens/movie-detail/movie-detail').then(m => m.MovieDetail),
+    children: [
+      {
+        path: 'chat',
+        loadComponent: () =>
+          import('./screens/movie-detail/chat/chat').then(m => m.Chat),
+      }
+    ]
   },
   {
     path: '**',

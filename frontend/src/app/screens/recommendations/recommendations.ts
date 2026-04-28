@@ -4,11 +4,12 @@ import { Router, RouterLink } from '@angular/router';
 import { QuestionnaireStateService } from '../../core/services/questionnaire-state.service';
 import { Movie } from '../../core/services/movie';
 import { UserService } from '../../core/services/user.service'; 
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-recommendations',
   standalone: true,
-  imports: [RouterLink], 
+  imports: [RouterLink, DecimalPipe], 
   templateUrl: './recommendations.html',
   styleUrl: './recommendations.scss',
 })

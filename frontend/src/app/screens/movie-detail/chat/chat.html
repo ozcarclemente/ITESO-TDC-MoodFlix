@@ -1,0 +1,66 @@
+<div class="chat-room">
+  @if (loadingUser()) {
+    <div class="loading">
+      <p>Cargando chat...</p>
+    </div>
+  } @else {
+    <div class="chat-header">
+      <span class="status" [class.online]="connected()">
+        {{ connected() ? '● Conectado' : '● Conectando...' }}
+      </span>
+    </div>
+
+    <div class="messages-list-wrapper">
+      <div class="messages-list" #messagesList (scroll)="onScroll()">
+        @if (messages().length === 0) {
+          <div class="empty-state">
+            <p>No hay mensajes aún. ¡Sé el primero en escribir!</p>
+          </div>
+        } @else {
+          @for (msg of messages(); track msg._id) {
+            <div class="message">
+              <div class="message-content">
+                <div class="username-row">
+                  @if (msg.userPhotoUrl) {
+                    <img [src]="msg.userPhotoUrl" alt="Foto de {{ msg.username }}" class="message-avatar" />
+                  } @else {
+                    <div class="message-avatar-placeholder">👤</div>
+                  }
+                  <span class="username">{{ msg.username }}</span>
+                </div>
+                <span class="content">{{ msg.content }}</span>
+                <span class="time">{{ msg.createdAt | date: 'short' }}</span>
+              </div>
+            </div>
+          }
+        }
+      </div>
+
+      @if (userScrolledUp) {
+        <button class="scroll-to-bottom" (click)="scrollToBottom()">
+          ↓ {{ unreadCount > 0 ? unreadCount + ' nuevo' + (unreadCount > 1 ? 's' : '') : 'Ir al final' }}
+        </button>
+      }
+    </div>
+
+    <div class="chat-input-wrapper">
+      <div class="chat-input">
+        <input
+          type="text"
+          [value]="inputText()"
+          (input)="inputText.set($any($event.target).value)"
+          (keydown.enter)="sendMessage()"
+          placeholder="Escribe un mensaje (máx 500 caracteres)..."
+          maxlength="500"
+          [disabled]="!connected()"
+        />
+        <button (click)="sendMessage()" [disabled]="!canSend()" class="btn-send">
+          Enviar
+        </button>
+      </div>
+      @if (inputText().length > 0) {
+        <span class="char-count">{{ inputText().length }}/500</span>
+      }
+    </div>
+  }
+</div>
