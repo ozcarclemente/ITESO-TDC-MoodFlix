@@ -1,0 +1,75 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "Build Images"
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Copy configuration files to VM
+        env:
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+        run: |
+          gcloud compute ssh ${{ secrets.GCP_INSTANCE }} \
+            --zone=${{ secrets.GCP_ZONE }} \
+            --quiet --command="mkdir -p ~/moodflix-secrets"
+          echo "$ENV_FILE" > /tmp/.env
+          gcloud compute scp /tmp/.env \
+            ${{ secrets.GCP_INSTANCE }}:~/moodflix-secrets/.env \
+            --zone=${{ secrets.GCP_ZONE }}
+          gcloud compute scp docker-compose.yml \
+            ${{ secrets.GCP_INSTANCE }}:~/moodflix-secrets/docker-compose.yml \
+            --zone=${{ secrets.GCP_ZONE }}
+          gcloud compute scp nginx.conf \
+            ${{ secrets.GCP_INSTANCE }}:~/moodflix-secrets/nginx.conf \
+            --zone=${{ secrets.GCP_ZONE }}
+
+      - name: Deploy to VM
+        run: |
+          gcloud compute ssh ${{ secrets.GCP_INSTANCE }} \
+            --zone=${{ secrets.GCP_ZONE }} \
+            --quiet << 'DEPLOY'
+          HOME=$(echo ~)
+          export HOME
+          cd $HOME/moodflix-secrets
+
+          echo "=== Configuring Docker authentication ==="
+          gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+          echo "=== Stopping old containers ==="
+          docker compose down || true
+
+          echo "=== Pulling latest images ==="
+          docker compose pull
+
+          echo "=== Starting containers ==="
+          docker compose up -d
+
+          echo "=== Waiting for services to stabilize ==="
+          sleep 5
+
+          echo "=== Running containers ==="
+          docker ps
+          DEPLOY

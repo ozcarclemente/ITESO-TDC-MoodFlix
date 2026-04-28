@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  backend:
+    image: us-central1-docker.pkg.dev/pickteso-arquitectura/moodflix-registry/moodflix-backend:latest
+    container_name: moodflix-backend
+    restart: always
+    networks:
+      - moodflix-net
+    volumes:
+      - /home/runner/moodflix-secrets/.env:/app/.env:ro
+    environment:
+      - NODE_ENV=production
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    image: us-central1-docker.pkg.dev/pickteso-arquitectura/moodflix-registry/moodflix-frontend:latest
+    container_name: moodflix-frontend
+    restart: always
+    networks:
+      - moodflix-net
+    expose:
+      - "80"
+
+  nginx:
+    image: nginx:alpine
+    container_name: moodflix-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - moodflix-net
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /home/runner/moodflix-secrets/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
+
+networks:
+  moodflix-net:
+    driver: bridge

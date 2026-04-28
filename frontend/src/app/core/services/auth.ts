@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environment';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +20,7 @@ export class Auth {
   setAuthenticated(): void {
     sessionStorage.setItem('authenticated', 'true');
   }
-  
+
   logout(): void {
     fetch(`${environment.apiUrl}/auth/logout`, {
       method: 'POST',

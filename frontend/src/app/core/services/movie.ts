@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { QuestionnaireAnswers } from '../models/questionnaire';
+import { environment } from '../../../environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class Movie {
   private http = inject(HttpClient);
   
   // Apuntamos al backend, no a TheMovieDB
-  private apiUrl = 'http://localhost:3000/api/movies';
+  private apiUrl = `${environment.apiUrl}/movies`;
 
   getMovie(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`, { withCredentials: true });
