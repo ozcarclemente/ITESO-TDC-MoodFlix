@@ -6,7 +6,9 @@ import cors from 'cors';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
+import { createServer } from 'http';
 import { initPassport } from './config/passport';
+import { initSockets } from './sockets';
 import router from './routes';
 
 
@@ -25,11 +27,14 @@ app.use(passport.initialize());
 
 app.use('/api', router);
 
+const httpServer = createServer(app);
+initSockets(httpServer);
+
 mongoose
     .connect(process.env.MONGODB_URI!)
     .then(() => {
         console.log('MongoDB conectado');
-        app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
+        httpServer.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
     })
     .catch((err) => {
         console.error('Error conectando MongoDB:', err);

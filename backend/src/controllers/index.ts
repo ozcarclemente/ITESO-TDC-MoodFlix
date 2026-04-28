@@ -1,14 +1,15 @@
 export { listMovies, getMovie } from './movies.controller';
-export { 
-    getProfile, 
-    updateProfile, 
-    getHistory, 
-    addHistory, 
-    deleteHistory, 
-    saveRating, 
-    getRatings, 
-    addFavorite, 
+export {
+    getMe,
+    getProfile,
+    updateProfile,
+    getHistory,
+    addHistory,
+    deleteHistory,
+    saveRating,
+    getRatings,
+    addFavorite,
     getFavorites,
-    deleteFavorite 
+    deleteFavorite
 } from './user.controller';
 

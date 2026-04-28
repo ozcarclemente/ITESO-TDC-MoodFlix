@@ -5,6 +5,20 @@ import { AuthRequest } from '../middlewares/auth.middleware';
 import { Playlist } from '../models/playlist.model';
 import { PlaylistItem } from '../models/playlist-item.model';
 
+export const getMe = async (req: AuthRequest, res: Response) => {
+    try {
+        const user = await User.findById(req.userId).select('name email');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json({ id: user._id, name: user.name, email: user.email });
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching user' });
+    }
+};
+
 export const getProfile = async (req: AuthRequest, res: Response) => {
     try {
         const user = await User.findById(req.userId!).select('-__v');

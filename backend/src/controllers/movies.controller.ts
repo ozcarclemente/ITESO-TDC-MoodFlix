@@ -4,7 +4,7 @@ import { number } from 'zod';
 
 export const listMovies = async (req: Request, res: Response) => {
     try {
-        const { genre, mood, page = 1, limit = 20 } = req.query;
+        const { genre, mood, page = 1, limit = 20, sort = 'title' } = req.query;
 
         const filter: Record<string, unknown> = {};
 
@@ -13,8 +13,12 @@ export const listMovies = async (req: Request, res: Response) => {
 
         const skip = (Number(page) - 1) * Number(limit);
 
+        const sortField = ['title', 'rating', 'releaseDate'].includes(String(sort))
+            ? String(sort)
+            : 'title';
+
         const [movies, total] = await Promise.all([
-            Movie.find(filter).skip(skip).limit(Number(limit)),
+            Movie.find(filter).sort({ [sortField]: 1 }).skip(skip).limit(Number(limit)),
             Movie.countDocuments(filter),
         ]);
 

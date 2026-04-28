@@ -3,6 +3,7 @@
 import { Router } from 'express';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import {
+    getMe,
     getProfile,
     updateProfile,
     getHistory,
@@ -10,12 +11,14 @@ import {
     deleteHistory,
     saveRating,
     getRatings,
-    addFavorite, 
+    addFavorite,
     getFavorites,
     deleteFavorite
 } from '../controllers';
 
 const router = Router();
+
+router.get('/me', authMiddleware, getMe);
 
 router.get('/profile', authMiddleware, getProfile);
 router.patch('/profile', authMiddleware, updateProfile);
