@@ -1,4 +1,4 @@
-import { Component, inject, signal, HostListener, ElementRef, OnInit } from '@angular/core';
+import { Component, inject, signal, HostListener, ElementRef, effect } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
 import { UserService } from '../../../core/services/user.service';
@@ -10,7 +10,7 @@ import { UserService } from '../../../core/services/user.service';
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss'
 })
-export class Navbar implements OnInit {
+export class Navbar {
   private authService = inject(Auth);
   private router = inject(Router);
   private el = inject(ElementRef);
@@ -20,27 +20,29 @@ export class Navbar implements OnInit {
   menuOpen = signal(false);
   userPhoto = signal<string | null>(null);
 
-  ngOnInit(): void {
-    if (this.isAuthenticated) {
-      this.userService.userPhoto$.subscribe({
-        next: (photoUrl) => {
-          this.userPhoto.set(photoUrl);
-        },
-      });
+  constructor() {
+    this.userService.userPhoto$.subscribe(photoUrl => {
+      this.userPhoto.set(photoUrl);
+    });
 
-      this.userService.getProfile().subscribe({
-        next: (user) => {
-          this.userService.setUserPhoto(user.photoUrl ?? null);
-        },
-        error: () => {
-          this.userService.setUserPhoto(null);
-        },
-      });
-    }
+    effect(() => {
+      if (this.authService.isAuth()) {
+        this.userService.getProfile().subscribe({
+          next: (user) => {
+            this.userService.setUserPhoto(user.photoUrl ?? null);
+          },
+          error: () => {
+            this.userService.setUserPhoto(null);
+          },
+        });
+      } else {
+        this.userPhoto.set(null);
+      }
+    });
   }
 
   get isAuthenticated(): boolean {
-    return this.authService.isAuthenticated();
+    return this.authService.isAuth();
   }
 
   toggleMenu(): void {

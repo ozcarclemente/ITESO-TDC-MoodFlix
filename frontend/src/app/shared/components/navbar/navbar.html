@@ -2,7 +2,7 @@
   <div class="nav-brand">
     @if(isAuthenticated){
 
-    <a routerLink="/home" class="brand-link" (click)="closeMenu()">
+    <a routerLink="/questionnaire" class="brand-link" (click)="closeMenu()">
       <span class="brand-icon">🎬</span>
       <span class="brand-name">Mood<span class="brand-accent">Flix</span></span>
     </a>
@@ -18,7 +18,7 @@
   <!-- Desktop links -->
   <div class="nav-links">
     @if (isAuthenticated) {
-    <a routerLink="/home" class="nav-item">Explorar</a>
+    <a routerLink="/explore" class="nav-item">Explorar</a>
     <a routerLink="/library" class="nav-item">Mi Biblioteca</a>
     <a routerLink="/questionnaire" class="nav-item">Mi cuestionario</a>
     <!-- Logica para mostrar el avatar y dropdown -->
@@ -37,7 +37,7 @@
     </div>
     } @else {
     <a routerLink="/" class="nav-item">Inicio</a>
-    <a routerLink="/auth/login" class="btn-login">Iniciar sesión</a>
+    <a routerLink="/login" class="btn-login">Iniciar sesión</a>
     }
   </div>
 
@@ -53,7 +53,7 @@
 @if (menuOpen()) {
 <div class="mobile-drawer">
   @if (isAuthenticated) {
-  <a routerLink="/home" class="drawer-item" (click)="closeMenu()">Explorar</a>
+  <a routerLink="/explore" class="drawer-item" (click)="closeMenu()">Explorar</a>
   <a routerLink="/library" class="drawer-item" (click)="closeMenu()">Mi Biblioteca</a>
   <a routerLink="/questionnaire" class="drawer-item" (click)="closeMenu()">Mi cuestionario</a>
   <div class="drawer-footer">
@@ -62,7 +62,7 @@
   </div>
   } @else {
   <a routerLink="/" class="drawer-item" (click)="closeMenu()">Inicio</a>
-  <a routerLink="/auth/login" class="drawer-item drawer-item--accent" (click)="closeMenu()">Iniciar sesión</a>
+  <a routerLink="/login" class="drawer-item drawer-item--accent" (click)="closeMenu()">Iniciar sesión</a>
   }
 </div>
 <div class="mobile-overlay" (click)="closeMenu()"></div>

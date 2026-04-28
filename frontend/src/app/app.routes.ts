@@ -8,7 +8,7 @@ export const routes: Routes = [
       import('./screens/landing/landing').then(m => m.Landing),
   },
   {
-    path: 'home',
+    path: 'explore',
     loadComponent: () =>
       import('./screens/home/home').then(m => m.Home),
   },
@@ -19,7 +19,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'auth/login',
+    path: 'login',
     loadComponent: () =>
       import('./screens/auth/login/login').then(m => m.Login),
   },

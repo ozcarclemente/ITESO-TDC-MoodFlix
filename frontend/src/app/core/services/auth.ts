@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { environment } from '../../../environment';
 
 @Injectable({
@@ -6,6 +6,8 @@ import { environment } from '../../../environment';
 })
 
 export class Auth {
+  isAuth = signal(sessionStorage.getItem('authenticated') === 'true');
+
   loginWithGoogle(): void {
     window.location.href = `${environment.apiUrl}/auth/google`;
   }
@@ -19,6 +21,7 @@ export class Auth {
 
   setAuthenticated(): void {
     sessionStorage.setItem('authenticated', 'true');
+    this.isAuth.set(true);
   }
 
   logout(): void {
@@ -28,7 +31,8 @@ export class Auth {
     }).finally(() => {
       sessionStorage.clear();
       localStorage.clear();
-      window.location.href = '/auth/login';
+      this.isAuth.set(false);
+      window.location.href = '/login';
     });
   }
 }
