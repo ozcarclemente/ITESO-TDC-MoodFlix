@@ -19,11 +19,46 @@ export class Profile implements OnInit {
 
   email = signal('');
 
+  isUploading = signal(false);
+
   profileForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
     photoUrl: [''],
     birthDate: [''],
   });
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        this.errorMessage.set('La imagen debe pesar menos de 5MB');
+        return;
+      }
+      this.uploadAvatar(file);
+    }
+  }
+
+  private uploadAvatar(file: File) {
+    this.isUploading.set(true);
+    this.errorMessage.set(null);
+
+    const formData = new FormData();
+    formData.append('avatar', file); 
+
+    this.userService.uploadAvatar(formData).subscribe({
+      next: (response) => {
+        this.profileForm.patchValue({ photoUrl: response.user.photoUrl });
+        this.userService.setUserPhoto(response.user.photoUrl);
+        this.isUploading.set(false);
+      },
+      error: (err) => {
+        console.error('Error al subir:', err);
+        this.errorMessage.set('Error al subir la imagen a S3.');
+        this.isUploading.set(false);
+      }
+    });
+  }
 
   ngOnInit() {
     this.userService.getProfile().subscribe({

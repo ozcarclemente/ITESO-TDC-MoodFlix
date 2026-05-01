@@ -54,4 +54,14 @@ export class UserService {
   setUserPhoto(photoUrl: string | null): void {
     this.userPhotoSubject.next(photoUrl);
   }
+
+  uploadAvatar(formData: FormData) {
+    // Asegúrate de que '/users/avatar' coincida con el prefijo que usas en tu backend
+    // Si tus otras rutas usan '/user/profile', entonces aquí sería '/user/avatar'
+    return this.http.post<any>(
+      `${environment.apiUrl}/user/avatar`, 
+      formData,
+      { withCredentials: true } 
+    );
+  }
 }

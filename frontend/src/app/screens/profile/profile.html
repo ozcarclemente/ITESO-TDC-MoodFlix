@@ -8,7 +8,8 @@
 
     <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
       <div class="photo-section">
-        <div class="photo-display">
+        <label for="avatarUpload" class="photo-display clickable" [class.is-uploading]="isUploading()">
+          
           @if (profileForm.get('photoUrl')?.value) {
             <img [src]="profileForm.get('photoUrl')?.value" alt="Foto de perfil" />
           } @else {
@@ -16,16 +17,24 @@
               <span>📷</span>
             </div>
           }
-        </div>
-        <div class="field-group">
-          <label for="photoUrl">URL de foto</label>
+          
+          <div class="photo-overlay">
+            <span>Cambiar foto</span>
+          </div>
+
           <input
-            id="photoUrl"
-            type="text"
-            formControlName="photoUrl"
-            placeholder="https://..."
+            id="avatarUpload"
+            type="file"
+            accept="image/png, image/jpeg, image/webp"
+            class="sr-only"
+            (change)="onFileSelected($event)"
+            [disabled]="isUploading()"
           />
-        </div>
+        </label>
+
+        @if (isUploading()) {
+          <p class="status-message">Cambiando Foto de perfil...</p>
+        }
       </div>
 
       <div class="email-display">

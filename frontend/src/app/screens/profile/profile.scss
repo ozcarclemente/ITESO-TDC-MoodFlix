@@ -60,6 +60,49 @@
     padding-bottom: $space-4;
     border-bottom: 1px solid $color-border-subtle;
 
+    .photo-display.clickable {
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      border-radius: 50%; 
+      display: inline-block;
+    
+      &.is-uploading {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+    
+      .photo-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: 500;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+        border-radius: 50%;
+      }
+    
+      &:hover .photo-overlay,
+      input[type="file"]:focus-visible ~ .photo-overlay {
+        opacity: 1;
+      }
+    }
+    
+    .status-message {
+      font-size: 0.85rem;
+      color: #f5c518; 
+      margin-top: 8px;
+      text-align: center;
+    }
+
     .photo-display {
       width: 120px;
       height: 120px;

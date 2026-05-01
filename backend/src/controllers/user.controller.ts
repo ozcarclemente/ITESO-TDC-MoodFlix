@@ -1,3 +1,5 @@
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import crypto from 'crypto';
 import { Response } from 'express';
 import { User } from '../models/user.model';
 import { UserWatched } from '../models/user-watched.model';
@@ -217,5 +219,56 @@ export const deleteFavorite = async (req: AuthRequest, res: Response) => {
     } catch (err) {
         console.error('Error al eliminar de "Ver más tarde":', err);
         res.status(500).json({ message: 'Error interno del servidor al eliminar de "Ver más tarde"' });
+    }
+};
+
+
+// Configuración del cliente S3
+const s3Client = new S3Client({
+    region: process.env.AWS_REGION || 'us-east-1',
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+    },
+});
+
+export const uploadAvatar = async (req: AuthRequest, res: Response) => {
+    try {
+        const userId = req.userId; 
+        const file = req.file; 
+
+        if (!file) {
+            return res.status(400).json({ message: 'No se envió ninguna imagen' });
+        }
+
+        const fileExtension = file.originalname.split('.').pop();
+        const uniqueFileName = `avatars/${userId}-${crypto.randomBytes(4).toString('hex')}.${fileExtension}`;
+        const bucketName = process.env.AWS_BUCKET_NAME;
+
+        const command = new PutObjectCommand({
+            Bucket: bucketName,
+            Key: uniqueFileName,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+        });
+
+        await s3Client.send(command);
+
+        const photoUrl = `https://${bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${uniqueFileName}`;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { photoUrl },
+            { new: true }
+        ).select('-__v');
+
+        res.status(200).json({ 
+            message: 'Foto de perfil actualizada con éxito', 
+            user: updatedUser 
+        });
+
+    } catch (error) {
+        console.error('Error subiendo a S3:', error);
+        res.status(500).json({ message: 'Error interno del servidor al subir la imagen' });
     }
 };
