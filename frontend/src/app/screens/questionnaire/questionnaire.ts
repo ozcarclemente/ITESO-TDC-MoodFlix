@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core'; // <-- Agregamos signal
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -13,7 +13,7 @@ import { QuestionnaireStateService } from '../../core/services/questionnaire-sta
   templateUrl: './questionnaire.html',
   styleUrl: './questionnaire.scss',
 })
-export class Questionnaire {
+export class Questionnaire implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private stateService = inject(QuestionnaireStateService);
@@ -50,6 +50,13 @@ export class Questionnaire {
   get moodControl() { return this.moodForm.get('mood'); }
   get energyControl() { return this.moodForm.get('energyLevel'); }
   get timeControl() { return this.moodForm.get('timeAvailable'); }
+
+  ngOnInit(): void {
+    const savedAnswers = this.stateService.answers();
+    if (savedAnswers) {
+      this.moodForm.patchValue(savedAnswers);
+    }
+  }
 
   onSubmit() {
     if (this.moodForm.valid) {

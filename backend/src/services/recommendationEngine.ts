@@ -6,7 +6,7 @@ interface QuestionnaireInput {
     mood: string;
     energyLevel: string;
     tensionTolerance: string;
-    availableTime: 'short' | 'medium' | 'long';
+    availableTime: number;
     genreHint?: string[];
 }
 
@@ -16,20 +16,19 @@ interface ScoredMovie {
 }
 
 const WEIGHTS = {
-    mood: 40,
-    energyLevel: 25,
-    tensionTolerance: 20,
+    mood: 25,
+    energyLevel: 20,
+    tensionTolerance: 15,
     availableTime: 15,
-};
-
-const TIME_MAP: Record<string, { min: number; max: number }> = {
-    short: { min: 0, max: 90 },
-    medium: { min: 91, max: 180 },
-    long: { min: 181, max: Infinity },
+    quality: 25,
 };
 
 function scoreMovie(movie: IMovie, input: QuestionnaireInput): number {
     let score = 0;
+
+    if (!movie.scores?.moods?.length) {
+        return 0;
+    }
 
     if (movie.scores.moods.includes(input.mood)) {
         score += WEIGHTS.mood;
@@ -43,16 +42,17 @@ function scoreMovie(movie: IMovie, input: QuestionnaireInput): number {
         score += WEIGHTS.tensionTolerance;
     }
 
-    const { min, max } = TIME_MAP[input.availableTime];
-    if (movie.runtimeMinutes && movie.runtimeMinutes >= min && movie.runtimeMinutes <= max) {
+    if (movie.runtimeMinutes && movie.runtimeMinutes >= input.availableTime * 0.8 && movie.runtimeMinutes <= input.availableTime * 1.2) {
         score += WEIGHTS.availableTime;
     }
 
     if (input.genreHint?.length) {
         const matchedGenres = movie.genres.filter(g => input.genreHint!.includes(g));
-        const bonus = Math.min(matchedGenres.length * 10, 20);
-        score += bonus;
+        score += Math.min(matchedGenres.length * 5, 15);
     }
+
+    const ratingScore = ((movie.ratingAvg || 5) / 10) * WEIGHTS.quality;
+    score += ratingScore;
 
     return score;
 }
@@ -61,12 +61,20 @@ export async function getRecommendations(
     input: QuestionnaireInput,
     limit = 10
 ): Promise<IMovie[]> {
-    const movies = await Movie.find({ 'scores.moods': input.mood }).lean();
+    const movies = await Movie.find().lean();
 
     const scored: ScoredMovie[] = movies
         .map(movie => ({ movie, score: scoreMovie(movie as IMovie, input) }))
+        .filter(s => s.score > 0)
         .sort((a, b) => b.score - a.score);
 
-    const count = Math.min(Math.max(limit, 5), 15);
-    return scored.slice(0, count).map(s => s.movie);
+    const topSubset = scored.slice(0, Math.min(limit * 3, scored.length));
+
+    for (let i = topSubset.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [topSubset[i], topSubset[j]] = [topSubset[j], topSubset[i]];
+    }
+
+    const count = Math.max(Math.min(limit, 20), 1);
+    return topSubset.slice(0, count).map(s => s.movie);
 }

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Movie } from '../models/movie.model';
-import { number } from 'zod';
+import { getRecommendations as getMovieRecommendations } from '../services/recommendationEngine';
 
 export const listMovies = async (req: Request, res: Response) => {
     try {
@@ -50,17 +50,18 @@ export const getMovie = async (req: Request, res: Response) => {
 
 export const getRecommendations = async (req: Request, res: Response) => {
     try {
-        const { mood, energyLevel, timeAvailable } = req.body;
+        const { mood, energyLevel, tensionTolerance, timeAvailable, genreHint } = req.body;
 
-        const filter: Record<string, any> = {};
-
-        if (mood) filter['scores.moods'] = mood;
-        
-        if (energyLevel) filter['scores.energyLevels'] = energyLevel;
-        
-        if (timeAvailable) filter.runtimeMinutes = { $lte: Number(timeAvailable) };
-
-        const movies = await Movie.find(filter).limit(12);
+        const movies = await getMovieRecommendations(
+            {
+                mood,
+                energyLevel,
+                tensionTolerance,
+                availableTime: timeAvailable,
+                genreHint,
+            },
+            12
+        );
 
         res.json(movies);
     } catch (err) {
