@@ -2,7 +2,113 @@
   <div class="login-card">
     <h2>Bienvenido a MoodFlix</h2>
     <p>¡Dinos cómo te sientes hoy y te decimos qué ver!.</p>
-    
+
+    @if (error()) {
+      <div class="error-message">{{ error() }}</div>
+    }
+
+    @if (!isRegistering()) {
+      <form [formGroup]="loginForm" (ngSubmit)="login()" class="auth-form">
+        <div class="form-group">
+          <input type="email" formControlName="email" placeholder="Email" required [class.input-error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+            <span class="error-text">{{ getErrorMessage(loginForm.get('email'), 'Email') }}</span>
+          }
+        </div>
+        <div class="form-group">
+          <div class="password-input-wrapper">
+            <input [type]="showLoginPassword() ? 'text' : 'password'" formControlName="password" placeholder="Contraseña" required [class.input-error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            <button type="button" class="toggle-password" (click)="showLoginPassword.update(v => !v)" title="Mostrar/ocultar contraseña">
+              @if (showLoginPassword()) {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              } @else {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              }
+            </button>
+          </div>
+          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <span class="error-text">{{ getErrorMessage(loginForm.get('password'), 'Contraseña') }}</span>
+          }
+        </div>
+        <button type="submit" class="btn-submit" [disabled]="loading() || loginForm.invalid">
+          {{ loading() ? 'Iniciando sesión...' : 'Iniciar sesión' }}
+        </button>
+      </form>
+      <p class="toggle-auth">¿No tienes cuenta? <button type="button" (click)="toggleMode()" class="link-button">Registrarse</button></p>
+    } @else {
+      <form [formGroup]="registerForm" (ngSubmit)="register()" class="auth-form">
+        <div class="form-group">
+          <input type="text" formControlName="name" placeholder="Nombre completo" required [class.input-error]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+          @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
+            <span class="error-text">{{ getErrorMessage(registerForm.get('name'), 'Nombre') }}</span>
+          }
+        </div>
+        <div class="form-group">
+          <input type="email" formControlName="email" placeholder="Email" required [class.input-error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+          @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+            <span class="error-text">{{ getErrorMessage(registerForm.get('email'), 'Email') }}</span>
+          }
+        </div>
+        <div class="form-group">
+          <div class="password-input-wrapper">
+            <input [type]="showRegisterPassword() ? 'text' : 'password'" formControlName="password" placeholder="Contraseña (mínimo 8 caracteres)" required [class.input-error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+            <button type="button" class="toggle-password" (click)="showRegisterPassword.update(v => !v)" title="Mostrar/ocultar contraseña">
+              @if (showRegisterPassword()) {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              } @else {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              }
+            </button>
+          </div>
+          @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+            <span class="error-text">{{ getErrorMessage(registerForm.get('password'), 'Contraseña') }}</span>
+          }
+        </div>
+        <div class="form-group">
+          <div class="password-input-wrapper">
+            <input [type]="showRegisterPasswordConfirm() ? 'text' : 'password'" formControlName="passwordConfirm" placeholder="Confirmar contraseña" required [class.input-error]="(registerForm.get('passwordConfirm')?.invalid || registerForm.hasError('passwordMismatch')) && registerForm.get('passwordConfirm')?.touched">
+            <button type="button" class="toggle-password" (click)="showRegisterPasswordConfirm.update(v => !v)" title="Mostrar/ocultar contraseña">
+              @if (showRegisterPasswordConfirm()) {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              } @else {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              }
+            </button>
+          </div>
+          @if (registerForm.get('passwordConfirm')?.invalid && registerForm.get('passwordConfirm')?.touched) {
+            <span class="error-text">{{ getErrorMessage(registerForm.get('passwordConfirm'), 'Confirmar contraseña') }}</span>
+          }
+          @if (registerForm.hasError('passwordMismatch') && registerForm.get('passwordConfirm')?.touched) {
+            <span class="error-text">Las contraseñas no coinciden</span>
+          }
+        </div>
+        <button type="submit" class="btn-submit" [disabled]="loading() || registerForm.invalid">
+          {{ loading() ? 'Registrando...' : 'Registrarse' }}
+        </button>
+      </form>
+      <p class="toggle-auth">¿Ya tienes cuenta? <button type="button" (click)="toggleMode()" class="link-button">Iniciar sesión</button></p>
+    }
+
+    <div class="divider">O</div>
+
     <button class="btn-google" (click)="loginWithGoogle()">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>

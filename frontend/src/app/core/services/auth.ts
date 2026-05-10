@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -8,8 +9,34 @@ import { environment } from '../../../environments/environment';
 export class Auth {
   isAuth = signal(sessionStorage.getItem('authenticated') === 'true');
 
+  constructor(private http: HttpClient) {}
+
   loginWithGoogle(): void {
     window.location.href = `${environment.apiUrl}/auth/google`;
+  }
+
+  register(email: string, password: string, passwordConfirm: string, name: string): Promise<any> {
+    return fetch(`${environment.apiUrl}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ email, password, passwordConfirm, name }),
+    }).then(res => {
+      if (!res.ok) return res.json().then(err => Promise.reject(err));
+      return res.json();
+    });
+  }
+
+  login(email: string, password: string): Promise<any> {
+    return fetch(`${environment.apiUrl}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ email, password }),
+    }).then(res => {
+      if (!res.ok) return res.json().then(err => Promise.reject(err));
+      return res.json();
+    });
   }
 
   isAuthenticated(): boolean {
@@ -27,7 +54,7 @@ export class Auth {
   logout(): void {
     fetch(`${environment.apiUrl}/auth/logout`, {
       method: 'POST',
-      credentials: 'include', // necesario para mandar la cookie
+      credentials: 'include',
     }).finally(() => {
       sessionStorage.clear();
       localStorage.clear();
