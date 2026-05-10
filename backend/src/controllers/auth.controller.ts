@@ -95,4 +95,34 @@ export const AuthController = {
 
         res.status(200).json({ message: 'Sesión cerrada' });
     },
+
+    async changePassword(req: Request, res: Response) {
+        try {
+            const { currentPassword, newPassword, confirmPassword } = req.body;
+            const userId = (req as any).userId;
+
+            if (!userId) {
+                return res.status(401).json({ message: 'No autenticado' });
+            }
+
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                return res.status(400).json({ message: 'Campos requeridos faltantes' });
+            }
+
+            if (newPassword !== confirmPassword) {
+                return res.status(400).json({ message: 'Las contraseñas no coinciden' });
+            }
+
+            if (newPassword.length < 8) {
+                return res.status(400).json({ message: 'Contraseña debe tener al menos 8 caracteres' });
+            }
+
+            await AuthService.changePassword(userId, currentPassword, newPassword);
+
+            res.status(200).json({ message: 'Contraseña cambiada exitosamente' });
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Error al cambiar contraseña';
+            res.status(400).json({ message });
+        }
+    },
 };

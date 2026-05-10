@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import { AuthController } from '../controllers/auth.controller';
+import { authMiddleware } from '../middlewares/auth.middleware';
 
 const router = Router();
 
@@ -20,5 +21,6 @@ router.get(
 );
 
 router.post('/logout', AuthController.logout);
+router.post('/change-password', authMiddleware, AuthController.changePassword);
 
 export default router;

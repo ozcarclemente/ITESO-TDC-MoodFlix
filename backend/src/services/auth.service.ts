@@ -50,4 +50,23 @@ export const AuthService = {
 
         return user;
     },
+
+    async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<void> {
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+
+        if (!user.password) {
+            throw new Error('Usuario registrado con Google. No puedes cambiar contraseña.');
+        }
+
+        const isPasswordValid = await user.comparePassword(currentPassword);
+        if (!isPasswordValid) {
+            throw new Error('Contraseña actual inválida');
+        }
+
+        user.password = newPassword;
+        await user.save();
+    },
 };
