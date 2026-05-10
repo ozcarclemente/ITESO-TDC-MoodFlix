@@ -4,12 +4,18 @@ import { getRecommendations as getMovieRecommendations } from '../services/recom
 
 export const listMovies = async (req: Request, res: Response) => {
     try {
-        const { genre, mood, page = 1, limit = 20, sort = 'title' } = req.query;
+        const { genre, mood, page = 1, limit = 20, sort = 'title', search } = req.query;
 
         const filter: Record<string, unknown> = {};
 
         if (genre) filter.genres = genre;
         if (mood) filter['scores.moods'] = mood;
+        if (search) {
+            filter.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                // { overview: { $regex: search, $options: 'i' } }
+            ];
+        }
 
         const skip = (Number(page) - 1) * Number(limit);
 

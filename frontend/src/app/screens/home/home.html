@@ -6,6 +6,18 @@
 
     <section class="filters-section">
       <div class="filters-bar">
+        <div class="filter-group search-group">
+          <label for="search-input">Buscar:</label>
+          <input
+            id="search-input"
+            type="text"
+            [(ngModel)]="searchQuery"
+            (input)="onSearchChange()"
+            placeholder="Busca por título..."
+            class="search-input"
+          >
+        </div>
+
         <div class="filter-group">
           <label for="genre-select">Género:</label>
           <select id="genre-select" [(ngModel)]="selectedGenre" (change)="onFilterChange()" class="filter-select">

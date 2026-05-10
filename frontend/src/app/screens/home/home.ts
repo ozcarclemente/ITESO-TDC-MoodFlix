@@ -19,9 +19,13 @@ export class Home implements OnInit {
   error = signal<string | null>(null);
   currentPage = signal(1);
   totalPages = signal(1);
+
+  searchQuery = signal('');
   selectedGenre = signal('');
   selectedMood = signal('');
   sortBy = signal<'title' | 'rating' | 'releaseDate'>('title');
+
+  private searchTimeout: any;
 
   ngOnInit(): void {
     this.fetchMovies();
@@ -29,7 +33,13 @@ export class Home implements OnInit {
 
   fetchMovies(): void {
     this.isLoading.set(true);
-    const params: any = { page: this.currentPage(), limit: 20, sort: this.sortBy() };
+    const params: any = {
+      page: this.currentPage(),
+      limit: 20,
+      sort: this.sortBy()
+    };
+
+    if (this.searchQuery()) params.search = this.searchQuery();
     if (this.selectedGenre()) params.genre = this.selectedGenre();
     if (this.selectedMood()) params.mood = this.selectedMood();
 
@@ -46,6 +56,14 @@ export class Home implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  onSearchChange(): void {
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.currentPage.set(1);
+      this.fetchMovies();
+    }, 300);
   }
 
   onFilterChange(): void {
@@ -97,8 +115,60 @@ export class Home implements OnInit {
   }
 
   resetFilters(): void {
+    this.searchQuery.set('');
     this.selectedGenre.set('');
     this.selectedMood.set('');
     this.onFilterChange();
   }
+
+  /* Local search approach (commented - can revert if needed):
+  allMovies = signal<any[]>([]);
+
+  loadAllMovies(): void {
+    this.isLoading.set(true);
+    const params: any = { limit: 10000, sort: this.sortBy() };
+
+    this.movieService.getAllMovies(params).subscribe({
+      next: (response) => {
+        this.allMovies.set(response.movies);
+        this.isLoading.set(false);
+        this.error.set(null);
+      },
+      error: (err) => {
+        console.error('Error cargando películas:', err);
+        this.error.set('No pudimos cargar las películas. Intenta de nuevo.');
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  getFilteredMovies(): any[] {
+    let filtered = this.allMovies();
+
+    if (this.searchQuery()) {
+      const query = this.searchQuery().toLowerCase();
+      filtered = filtered.filter(m => m.title.toLowerCase().includes(query));
+    }
+
+    if (this.selectedGenre()) {
+      filtered = filtered.filter(m => m.genres.includes(this.selectedGenre()));
+    }
+
+    if (this.selectedMood()) {
+      filtered = filtered.filter(m => m.scores.moods.includes(this.selectedMood()));
+    }
+
+    return filtered;
+  }
+
+  get moviesLocal(): any[] {
+    const filtered = this.getFilteredMovies();
+    const start = (this.currentPage() - 1) * 20;
+    return filtered.slice(start, start + 20);
+  }
+
+  get totalPagesLocal(): number {
+    return Math.ceil(this.getFilteredMovies().length / 20);
+  }
+  */
 }

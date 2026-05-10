@@ -25,6 +25,14 @@
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: $space-4;
   margin-top: $space-4;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .movie-card {
@@ -125,6 +133,22 @@
   background: $color-bg-surface;
   border-radius: $radius-lg;
   border: 1px solid $color-border-subtle;
+
+  @media (max-width: 768px) {
+    .search-group {
+      flex: 1 0 100%;
+    }
+
+    .filter-group:nth-of-type(2),
+    .filter-group:nth-of-type(3) {
+      flex: 1 0 calc(50% - #{$space-4 / 2});
+    }
+
+    .btn-reset {
+      flex: 1 0 100%;
+      align-self: stretch;
+    }
+  }
 }
 
 .filter-group {
@@ -138,7 +162,8 @@
     font-weight: 500;
   }
 
-  .filter-select {
+  .filter-select,
+  .search-input {
     padding: $space-2 $space-3;
     background: rgba(99, 102, 241, 0.1);
     border: 1px solid #6366f1;
@@ -156,6 +181,21 @@
       background: #1a1b2e;
       color: #fff;
     }
+  }
+
+  .search-input {
+    cursor: text;
+    flex: 1;
+    min-width: 200px;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  &.search-group {
+    flex: 1;
+    min-width: 200px;
   }
 }
 

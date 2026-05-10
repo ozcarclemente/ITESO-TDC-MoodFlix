@@ -23,7 +23,7 @@ export class Movie {
     });
   }
 
-  getAllMovies(params?: { genre?: string; mood?: string; page?: number; limit?: number }): Observable<any> {
+  getAllMovies(params?: { genre?: string; mood?: string; page?: number; limit?: number; search?: string; sort?: string }): Observable<any> {
     return this.http.get<{ movies: any[]; total: number; page: number; totalPages: number }>(
       this.apiUrl,
       { params: { ...params }, withCredentials: true }
