@@ -87,13 +87,8 @@ jobs:
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
       - name: Build Docker image
-        env:
-          API_URL: https://moodflix.mocking.so/api
-          TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
         run: |
           docker build \
-            --build-arg API_URL=$API_URL \
-            --build-arg TMDB_TOKEN=$TMDB_TOKEN \
             -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/moodflix-registry/moodflix-frontend:latest \
             ./frontend
 

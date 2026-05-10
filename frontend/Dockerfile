@@ -1,12 +1,9 @@
 # Build stage
 FROM node:20-alpine AS builder
 WORKDIR /app
-ARG API_URL
-ARG TMDB_TOKEN
 COPY package.json ./
 RUN npm install
 COPY . .
-RUN echo "export const environment = { production: true, apiUrl: '${API_URL}', tmdbToken: '${TMDB_TOKEN}' };" > src/environment.ts
 RUN npm run build
 
 # Production stage

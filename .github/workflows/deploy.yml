@@ -59,7 +59,7 @@ jobs:
           gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
           echo "=== Stopping old containers ==="
-          docker compose down || true
+          docker compose down --rmi all || true
 
           echo "=== Pulling latest images ==="
           docker compose pull
