@@ -217,4 +217,27 @@
       transform: translateY(-2px);
     }
   }
+
+  .change-password-btn {
+    width: 100%;
+    padding: $space-4;
+    margin-top: $space-6;
+    background: transparent;
+    color: $color-accent;
+    border: 2px solid $color-accent;
+    border-radius: $radius-lg;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      background: rgba($color-accent, 0.1);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
 }

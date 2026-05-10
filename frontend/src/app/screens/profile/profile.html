@@ -76,5 +76,11 @@
         @if (isSaving()) { Guardando… } @else { Guardar cambios }
       </button>
     </form>
+
+    @if (!isGoogleUser()) {
+      <button type="button" class="change-password-btn" (click)="openChangePasswordDialog()">
+        Cambiar contraseña
+      </button>
+    }
   </div>
 }

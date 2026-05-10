@@ -1,16 +1,20 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
 import { UserService } from '../../core/services/user.service';
+import { ChangePasswordDialog } from './change-password-dialog/change-password-dialog';
 
 @Component({
   selector: 'app-profile',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })
 export class Profile implements OnInit {
   private fb = inject(FormBuilder);
   private userService = inject(UserService);
+  private dialog = inject(MatDialog);
 
   isLoading = signal(true);
   isSaving = signal(false);
@@ -18,6 +22,7 @@ export class Profile implements OnInit {
   errorMessage = signal<string | null>(null);
 
   email = signal('');
+  isGoogleUser = signal(false);
 
   isUploading = signal(false);
 
@@ -29,7 +34,7 @@ export class Profile implements OnInit {
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
-    
+
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
         this.errorMessage.set('La imagen debe pesar menos de 5MB');
@@ -62,8 +67,9 @@ export class Profile implements OnInit {
 
   ngOnInit() {
     this.userService.getProfile().subscribe({
-      next: (user) => {
+      next: (user: any) => {
         this.email.set(user.email);
+        this.isGoogleUser.set(!!user.googleSub);
         this.profileForm.patchValue({
           name: user.name,
           photoUrl: user.photoUrl ?? '',
@@ -79,6 +85,19 @@ export class Profile implements OnInit {
   }
 
   get nameControl() { return this.profileForm.get('name'); }
+
+  openChangePasswordDialog(): void {
+    this.dialog.open(ChangePasswordDialog, {
+      width: '420px',
+      panelClass: 'custom-dialog',
+      disableClose: false,
+    }).afterClosed().subscribe((result) => {
+      if (result) {
+        this.saveSuccess.set(true);
+        setTimeout(() => this.saveSuccess.set(false), 3000);
+      }
+    });
+  }
 
   onSubmit() {
     if (this.profileForm.invalid) {

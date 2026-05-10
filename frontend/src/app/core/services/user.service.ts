@@ -40,8 +40,8 @@ export class UserService {
     );
   }
 
-  getProfile(): Observable<{ name: string; email: string; photoUrl?: string; birthDate?: string }> {
-    return this.http.get<{ name: string; email: string; photoUrl?: string; birthDate?: string }>(
+  getProfile(): Observable<{ name: string; email: string; photoUrl?: string; birthDate?: string; googleSub?: string }> {
+    return this.http.get<{ name: string; email: string; photoUrl?: string; birthDate?: string; googleSub?: string }>(
       `${this.apiUrl}/profile`,
       { withCredentials: true }
     );
@@ -59,9 +59,17 @@ export class UserService {
     // Asegúrate de que '/users/avatar' coincida con el prefijo que usas en tu backend
     // Si tus otras rutas usan '/user/profile', entonces aquí sería '/user/avatar'
     return this.http.post<any>(
-      `${environment.apiUrl}/user/avatar`, 
+      `${environment.apiUrl}/user/avatar`,
       formData,
-      { withCredentials: true } 
+      { withCredentials: true }
     );
+  }
+
+  changePassword(currentPassword: string, newPassword: string, confirmPassword: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/auth/change-password`, {
+      currentPassword,
+      newPassword,
+      confirmPassword
+    }, { withCredentials: true });
   }
 }

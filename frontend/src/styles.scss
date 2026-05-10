@@ -1,3 +1,41 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$cyan-palette,
+        tertiary: mat.$orange-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+  height: 100%;
+}
 // ══════════════════════════════════════════════════════════════════════════════
 // MoodFlix — Global Styles
 // ══════════════════════════════════════════════════════════════════════════════
@@ -29,9 +67,9 @@ $color-border-subtle: rgba(255, 255, 255, 0.06); // Borde neutro sutil
 
 // Semánticos
 $color-danger: #e05555; // Errores / eliminar
-$color-danger-muted: rgba(224, 85, 85, 0.10);
+$color-danger-muted: rgba(224, 85, 85, 0.1);
 $color-success: #4caf7d; // Confirmaciones
-$color-success-muted: rgba(76, 175, 125, 0.10);
+$color-success-muted: rgba(76, 175, 125, 0.1);
 
 // ── Tipografía ────────────────────────────────────────────────────────────────
 
@@ -195,7 +233,9 @@ app-root {
   cursor: pointer;
   text-decoration: none;
   clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
-  transition: background 0.2s ease, transform 0.15s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
 
   &:hover {
     background: $color-accent-dim;
@@ -221,7 +261,9 @@ app-root {
   border: 1px solid $color-border;
   cursor: pointer;
   text-decoration: none;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
 
   &:hover {
     border-color: $color-accent;
@@ -275,4 +317,79 @@ app-recommendations {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+// ── Material Dialog customizado ───────────────────────────────────────────────
+
+.custom-dialog {
+  .mdc-dialog__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .mdc-dialog__surface {
+    background-color: $color-bg-surface !important;
+    border: 1px solid $color-border-subtle !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important;
+    padding: $space-8 !important;
+  }
+
+  h2 {
+    color: $color-accent !important;
+    font-family: $font-display !important;
+    font-size: $text-2xl !important;
+    margin-bottom: $space-6 !important;
+  }
+
+  mat-dialog-content {
+    color: $color-text !important;
+    padding: 0 !important;
+    margin-bottom: $space-6 !important;
+  }
+
+  mat-dialog-actions {
+    padding: $space-6 0 0 !important;
+    margin: 0 !important;
+    border-top: 1px solid $color-border-subtle !important;
+    justify-content: flex-end !important;
+    gap: $space-4 !important;
+  }
+
+  .mdc-button {
+    color: $color-accent !important;
+
+    &.mdc-button--raised {
+      background-color: $color-accent !important;
+      color: #000000 !important;
+
+      &:hover {
+        background-color: $color-accent-dim !important;
+      }
+
+      &:disabled {
+        background-color: $color-bg-subtle !important;
+        color: $color-text-muted !important;
+      }
+    }
+  }
+
+  input {
+    background-color: $color-bg-subtle !important;
+    color: $color-text !important;
+    border-color: $color-border-subtle !important;
+
+    &::placeholder {
+      color: $color-text-muted !important;
+    }
+
+    &:focus {
+      border-color: $color-accent !important;
+      background-color: $color-bg !important;
+    }
+  }
+
+  label {
+    color: $color-text !important;
+  }
 }
