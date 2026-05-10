@@ -4,13 +4,15 @@ import { AuthController } from '../controllers/auth.controller';
 
 const router = Router();
 
-// Inicia el flujo con Google
+router.post('/register', AuthController.register);
+router.post('/login', AuthController.login);
+
+// Google SSO
 router.get(
   '/google',
   passport.authenticate('google', { scope: ['profile', 'email'], session: false })
 );
 
-// Google regresa aquí después de autenticar
 router.get(
   '/google/callback',
   passport.authenticate('google', { failureRedirect: '/login', session: false }),
