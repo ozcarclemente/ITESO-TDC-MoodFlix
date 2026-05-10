@@ -393,3 +393,10 @@ app-recommendations {
     color: $color-text !important;
   }
 }
+
+// ── Dialog Backdrop con blur ──────────────────────────────────────────────────
+
+.blurred-backdrop {
+  backdrop-filter: blur(4px) !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}

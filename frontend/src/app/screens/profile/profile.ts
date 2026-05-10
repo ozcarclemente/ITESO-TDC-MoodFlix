@@ -90,6 +90,7 @@ export class Profile implements OnInit {
     this.dialog.open(ChangePasswordDialog, {
       width: '420px',
       panelClass: 'custom-dialog',
+      backdropClass: 'blurred-backdrop',
       disableClose: false,
     }).afterClosed().subscribe((result) => {
       if (result) {

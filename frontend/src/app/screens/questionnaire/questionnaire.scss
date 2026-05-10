@@ -30,12 +30,15 @@
       color: #ffffff; /* Ajuste para que resalte sobre el fondo */
       margin-bottom: $space-4;
       font-size: 1.1rem;
+      text-align: center;
     }
 
     .options-grid {
       display: flex;
       flex-wrap: wrap;
       gap: $space-3;
+      justify-content: center;
+      align-items: center;
     }
 
     /* Adaptación de la clase .mood-card de la landing */
