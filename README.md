@@ -20,27 +20,38 @@ moodflix/
 │   │   │   │   │   └── questionnaire.ts
 │   │   │   │   └── services/
 │   │   │   │       ├── auth.ts
-│   │   │   │       └── movie.ts
+│   │   │   │       ├── movie.ts
+│   │   │   │       ├── user.service.ts
+│   │   │   │       ├── chat.service.ts
+│   │   │   │       └── questionnaire-state.service.ts
 │   │   │   ├── screens/
+│   │   │   │   ├── landing/
 │   │   │   │   ├── auth/
-│   │   │   │   │   ├── callback/
 │   │   │   │   │   └── login/
 │   │   │   │   ├── home/
-│   │   │   │   ├── landing/
 │   │   │   │   ├── questionnaire/
-│   │   │   │   └── recommendations/
+│   │   │   │   ├── recommendations/
+│   │   │   │   ├── profile/
+│   │   │   │   │   └── change-password-dialog/
+│   │   │   │   ├── library/
+│   │   │   │   └── movie-detail/
 │   │   │   ├── shared/
 │   │   │   │   └── components/
-│   │   │   │       ├── footer/
-│   │   │   │       └── navbar/
+│   │   │   │       ├── navbar/
+│   │   │   │       └── footer/
 │   │   │   ├── app.config.ts
 │   │   │   ├── app.routes.ts
-│   │   │   └── app.ts
+│   │   │   ├── app.ts
+│   │   │   └── app.scss
 │   │   ├── environments/
-│   │   │   └── environment.ts
+│   │   │   ├── environment.ts
+│   │   │   └── environment.development.ts
 │   │   ├── index.html
 │   │   ├── main.ts
 │   │   └── styles.scss
+│   ├── public/
+│   ├── nginx.conf
+│   ├── Dockerfile
 │   ├── angular.json
 │   ├── package.json
 │   └── tsconfig.json
@@ -52,19 +63,35 @@ moodflix/
         │   └── passport.ts          # Configuración OAuth 2.0 con Google
         ├── controllers/
         │   ├── auth.controller.ts
+        │   ├── message.controller.ts
+        │   ├── movies.controller.ts
+        │   ├── playlist.controller.ts
+        │   ├── user.controller.ts
         │   └── index.ts
         ├── middlewares/
         │   ├── auth.middleware.ts   # Validación JWT
         │   └── index.ts
         ├── models/
         │   ├── user.model.ts
+        │   ├── movie.model.ts
+        │   ├── message.model.ts
+        │   ├── playlist.model.ts
+        │   ├── questionnaire.model.ts
+        │   ├── user-watched.model.ts
         │   └── index.ts
         ├── routes/
         │   ├── auth.routes.ts
+        │   ├── message.routes.ts
+        │   ├── movies.routes.ts
+        │   ├── user.routes.ts
         │   └── index.ts
         ├── services/
         │   ├── auth.service.ts
+        │   ├── recommendationEngine.ts
+        │   ├── derive-scores.service.ts
         │   └── index.ts
+        ├── scripts/
+        │   └── seed.ts              # Scripts DB
         ├── sockets/
         │   └── index.ts
         └── index.ts
@@ -74,22 +101,48 @@ moodflix/
 
 **Frontend**
 - Angular + TypeScript
-- Diseño responsivo mobile-first
+- Diseño responsivo mobile
 
 **Backend**
 - Node.js + Express.js + TypeScript
-- Autenticación: OAuth 2.0 con Google (Passport.js) + JWT
-
+- Auth: Google OAuth 2.0 (Passport.js) o registro manual (email/password). JWT para sesiones.
 **Base de Datos**
 - MongoDB Atlas
 
 **Servicios externos**
 - TMDB API (metadatos de películas)
+- AWS S3 (imágenes de perfil de usuario)
 
-**Infraestructura**
-- Frontend: Vercel
-- Backend: Render / Railway
-- Base de datos: MongoDB Atlas
+**Infraestructura (IaaS)**
+- **Compute**: Google Cloud Compute Engine (VMs con Docker)
+- **Registry**: Google Cloud Artifact Registry
+- **Orquestación**: Docker + Docker Compose
+- **Base de datos**: MongoDB Atlas (cloud)
+- **CI/CD**: GitHub Actions (build + deploy automático)
+
+## Setup Local
+
+### Prerequisites
+- Node.js 18+
+- MongoDB Atlas (credenciales)
+- Google OAuth credentials
+
+### Backend
+```bash
+cd backend
+npm install
+cp .env.example .env
+npm run dev
+```
+
+### Frontend
+```bash
+cd frontend
+npm install
+ng serve
+```
+
+Accede a `http://localhost:4200`
 
 ## Autores
 
