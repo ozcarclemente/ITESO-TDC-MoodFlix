@@ -9,6 +9,16 @@
   border-radius: $radius-lg;
   animation: float-in 0.6s ease both;
 
+  @media (max-width: 768px) {
+    margin: $space-8 auto;
+    padding: $space-6;
+  }
+
+  @media (max-width: 480px) {
+    margin: $space-4 auto;
+    padding: $space-5;
+  }
+
   h2 {
     text-align: center;
     color: $color-accent;
@@ -16,6 +26,10 @@
     margin-bottom: $space-8;
     font-size: clamp(1.5rem, 4vw, 2.5rem);
     letter-spacing: 0.05em;
+
+    @media (max-width: 480px) {
+      margin-bottom: $space-6;
+    }
   }
 
   .loading-text {
@@ -33,16 +47,29 @@
     border: 1px solid $color-border-subtle;
     border-radius: $radius-lg;
 
+    @media (max-width: 480px) {
+      margin-bottom: $space-5;
+      padding: $space-3;
+    }
+
     .field-label {
       font-weight: 600;
       color: $color-text-muted;
       font-size: $text-sm;
       margin-bottom: $space-2;
+
+      @media (max-width: 480px) {
+        font-size: $text-xs;
+      }
     }
 
     .field-value {
       color: #ffffff;
       font-size: 1rem;
+
+      @media (max-width: 480px) {
+        font-size: $text-sm;
+      }
     }
   }
 
@@ -50,6 +77,10 @@
     display: flex;
     flex-direction: column;
     gap: $space-6;
+
+    @media (max-width: 480px) {
+      gap: $space-4;
+    }
   }
 
   .photo-section {
@@ -60,18 +91,23 @@
     padding-bottom: $space-4;
     border-bottom: 1px solid $color-border-subtle;
 
+    @media (max-width: 480px) {
+      gap: $space-3;
+      padding-bottom: $space-3;
+    }
+
     .photo-display.clickable {
       position: relative;
       cursor: pointer;
       overflow: hidden;
-      border-radius: 50%; 
+      border-radius: 50%;
       display: inline-block;
-    
+
       &.is-uploading {
         opacity: 0.5;
         pointer-events: none;
       }
-    
+
       .photo-overlay {
         position: absolute;
         top: 0;
@@ -89,16 +125,16 @@
         transition: opacity 0.2s ease-in-out;
         border-radius: 50%;
       }
-    
+
       &:hover .photo-overlay,
       input[type="file"]:focus-visible ~ .photo-overlay {
         opacity: 1;
       }
     }
-    
+
     .status-message {
       font-size: 0.85rem;
-      color: #f5c518; 
+      color: #f5c518;
       margin-top: 8px;
       text-align: center;
     }
@@ -114,6 +150,12 @@
       align-items: center;
       justify-content: center;
 
+      @media (max-width: 480px) {
+        width: 100px;
+        height: 100px;
+        border-width: 1.5px;
+      }
+
       img {
         width: 100%;
         height: 100%;
@@ -126,6 +168,10 @@
         align-items: center;
         justify-content: center;
         color: $color-text-muted;
+
+        @media (max-width: 480px) {
+          font-size: 2.5rem;
+        }
       }
     }
   }
@@ -135,10 +181,18 @@
     flex-direction: column;
     gap: $space-3;
 
+    @media (max-width: 480px) {
+      gap: $space-2;
+    }
+
     label {
       font-weight: 600;
       color: #ffffff;
       font-size: $text-sm;
+
+      @media (max-width: 480px) {
+        font-size: $text-xs;
+      }
     }
 
     input {
@@ -159,6 +213,11 @@
       &:focus {
         border-color: $color-accent;
       }
+
+      @media (max-width: 480px) {
+        padding: $space-3;
+        font-size: 1rem;
+      }
     }
 
     .error-message {
@@ -166,6 +225,10 @@
       font-size: $text-sm;
       font-weight: 500;
       animation: float-in 0.3s ease both;
+
+      @media (max-width: 480px) {
+        font-size: $text-xs;
+      }
     }
   }
 
@@ -178,6 +241,11 @@
     border: 1px solid #10b981;
     border-radius: $radius-lg;
     animation: float-in 0.3s ease both;
+
+    @media (max-width: 480px) {
+      font-size: $text-xs;
+      padding: $space-2 $space-3;
+    }
   }
 
   .error-message {
@@ -189,6 +257,11 @@
     border: 1px solid #ef4444;
     border-radius: $radius-lg;
     animation: float-in 0.3s ease both;
+
+    @media (max-width: 480px) {
+      font-size: $text-xs;
+      padding: $space-2 $space-3;
+    }
   }
 
   button[type="submit"] {
@@ -216,6 +289,11 @@
       filter: brightness(1.1);
       transform: translateY(-2px);
     }
+
+    @media (max-width: 480px) {
+      padding: $space-3;
+      font-size: 1rem;
+    }
   }
 
   .change-password-btn {
@@ -238,6 +316,12 @@
 
     &:active {
       transform: translateY(0);
+    }
+
+    @media (max-width: 480px) {
+      padding: $space-3;
+      margin-top: $space-4;
+      font-size: $text-sm;
     }
   }
 }

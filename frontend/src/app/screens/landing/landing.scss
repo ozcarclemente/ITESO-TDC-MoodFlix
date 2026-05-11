@@ -13,15 +13,22 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: $space-12;
   width: 100%;
   max-width: $max-width;
   margin: 0 auto;
   padding: $space-16 $space-4;
 
+  @media (max-width: 768px) {
+    gap: $space-8;
+    padding: $space-12 $space-3;
+  }
+
   @include lg {
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     padding: $space-20 $space-8;
   }
 }
@@ -33,9 +40,15 @@
   gap: $space-6;
   max-width: 540px;
   text-align: center;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    gap: $space-4;
+  }
 
   @include lg {
     text-align: left;
+    width: auto;
   }
 }
 
@@ -46,11 +59,15 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: $text-xs;
+  }
 }
 
 .landing-hero__title {
   font-family: $font-display;
-  font-size: clamp(4rem, 10vw, 7rem);
+  font-size: clamp(2.5rem, 8vw, 7rem);
   line-height: 0.95;
   color: $color-text;
   letter-spacing: 0.02em;
@@ -67,6 +84,10 @@
   line-height: 1.7;
   margin: 0;
   text-wrap: balance;
+
+  @media (max-width: 768px) {
+    font-size: $text-base;
+  }
 }
 
 .landing-hero__cta {
@@ -74,15 +95,29 @@
   flex-wrap: wrap;
   gap: $space-4;
   justify-content: center;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    gap: $space-3;
+  }
 
   @include lg {
     justify-content: flex-start;
+    width: auto;
   }
 }
 
 // ── Visual / Mood grid ────────────────────────────────────────────────────────
 .landing-hero__visual {
   flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  @include lg {
+    width: auto;
+  }
 }
 
 .mood-grid {
@@ -90,6 +125,11 @@
   grid-template-columns: repeat(2, 1fr);
   gap: $space-3;
   width: 280px;
+
+  @media (max-width: 480px) {
+    width: 240px;
+    gap: $space-2;
+  }
 
   @include md {
     width: 320px;
@@ -112,6 +152,11 @@
   text-align: center;
   transition: border-color 0.3s, color 0.3s, transform 0.3s;
   animation: float-in 0.6s ease both;
+
+  @media (max-width: 480px) {
+    padding: $space-3 $space-4;
+    font-size: 0.875rem;
+  }
 
   &:hover {
     border-color: $color-accent;

@@ -8,6 +8,15 @@
   border-radius: $radius-lg;
   overflow: hidden;
   background: $color-bg-surface;
+
+  @media (max-width: 768px) {
+    height: 400px;
+  }
+
+  @media (max-width: 480px) {
+    height: 350px;
+    border-radius: $radius-md;
+  }
 }
 
 .loading {
@@ -23,12 +32,20 @@
   border-bottom: 1px solid $color-border-subtle;
   background: $color-bg-subtle;
 
+  @media (max-width: 480px) {
+    padding: $space-2 $space-3;
+  }
+
   .status {
     font-size: $text-xs;
     color: $color-text-muted;
     display: flex;
     align-items: center;
     gap: $space-1;
+
+    @media (max-width: 480px) {
+      font-size: 11px;
+    }
 
     &.online {
       color: $color-success;
@@ -62,6 +79,12 @@
     white-space: nowrap;
     z-index: 10;
 
+    @media (max-width: 480px) {
+      bottom: $space-2;
+      padding: $space-1 $space-3;
+      font-size: 10px;
+    }
+
     &:hover {
       background: $color-accent-dim;
       transform: translateX(-50%) translateY(-1px);
@@ -77,6 +100,15 @@
   flex-direction: column;
   gap: $space-3;
 
+  @media (max-width: 768px) {
+    padding: $space-3;
+    gap: $space-2;
+  }
+
+  @media (max-width: 480px) {
+    padding: $space-2;
+  }
+
   .empty-state {
     display: flex;
     justify-content: center;
@@ -90,6 +122,10 @@
     display: flex;
     gap: $space-2;
 
+    @media (max-width: 480px) {
+      gap: $space-1;
+    }
+
     .message-content {
       display: flex;
       flex-direction: column;
@@ -100,10 +136,19 @@
       border-left: 3px solid $color-accent;
       flex: 1;
 
+      @media (max-width: 480px) {
+        padding: $space-2;
+        border-radius: $radius-sm;
+      }
+
       .username-row {
         display: flex;
         align-items: center;
         gap: $space-2;
+
+        @media (max-width: 480px) {
+          gap: $space-1;
+        }
 
         .message-avatar {
           width: 20px;
@@ -112,6 +157,11 @@
           object-fit: cover;
           border: 1px solid $color-accent;
           flex-shrink: 0;
+
+          @media (max-width: 480px) {
+            width: 16px;
+            height: 16px;
+          }
         }
 
         .message-avatar-placeholder {
@@ -125,12 +175,22 @@
           font-size: 12px;
           flex-shrink: 0;
           background: rgba($color-accent, 0.1);
+
+          @media (max-width: 480px) {
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+          }
         }
 
         .username {
           font-weight: 600;
           font-size: $text-xs;
           color: $color-accent;
+
+          @media (max-width: 480px) {
+            font-size: 10px;
+          }
         }
       }
 
@@ -139,12 +199,21 @@
         color: $color-text;
         word-wrap: break-word;
         line-height: 1.4;
+
+        @media (max-width: 480px) {
+          font-size: 13px;
+        }
       }
 
       .time {
         font-size: $text-xs;
         color: $color-text-muted;
         margin-top: $space-1;
+
+        @media (max-width: 480px) {
+          font-size: 10px;
+          margin-top: $space-1;
+        }
       }
     }
   }
@@ -155,9 +224,17 @@
   border-top: 1px solid $color-border-subtle;
   background: $color-bg-subtle;
 
+  @media (max-width: 480px) {
+    padding: $space-2 $space-3;
+  }
+
   .chat-input {
     display: flex;
     gap: $space-2;
+
+    @media (max-width: 480px) {
+      gap: $space-1;
+    }
 
     input {
       flex: 1;
@@ -184,6 +261,11 @@
         color: $color-text-disabled;
         cursor: not-allowed;
       }
+
+      @media (max-width: 480px) {
+        padding: $space-2 $space-2;
+        font-size: 16px;
+      }
     }
 
     .btn-send {
@@ -194,8 +276,10 @@
       border-radius: $radius-md;
       font-weight: 600;
       font-family: $font-body;
+      font-size: $text-sm;
       cursor: pointer;
       transition: background 0.2s;
+      white-space: nowrap;
 
       &:hover:not(:disabled) {
         background: $color-accent-dim;
@@ -205,6 +289,11 @@
         background: $color-text-disabled;
         cursor: not-allowed;
       }
+
+      @media (max-width: 480px) {
+        padding: $space-2 $space-3;
+        font-size: 12px;
+      }
     }
   }
 
@@ -213,27 +302,16 @@
     font-size: $text-xs;
     color: $color-text-muted;
     margin-top: $space-2;
+
+    @media (max-width: 480px) {
+      font-size: 10px;
+      margin-top: $space-1;
+    }
   }
 }
 
 @include md {
   .chat-room {
     height: 600px;
-  }
-}
-
-@media (max-width: 768px) {
-  .chat-room {
-    height: 400px;
-  }
-
-  .messages-list {
-    padding: $space-3;
-  }
-
-  .chat-input-wrapper {
-    .chat-input input {
-      font-size: 16px;
-    }
   }
 }
