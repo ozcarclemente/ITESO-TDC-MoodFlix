@@ -1,0 +1,30 @@
+{
+  "name": "iteso-tdc-moodflix",
+  "version": "1.0.0",
+  "description": "Plataforma web responsiva que genera recomendaciones personalizadas de películas basadas en el estado emocional inmediato del usuario.",
+  "main": "index.js",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "package": "npm i && npm i -w frontend",
+    "start:frontend": "npm run start -w frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ozcarclemente/ITESO-TDC-MoodFlix.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ozcarclemente/ITESO-TDC-MoodFlix/issues"
+  },
+  "homepage": "https://github.com/ozcarclemente/ITESO-TDC-MoodFlix#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.7.0"
+  }
+}

@@ -6,6 +6,9 @@ import MessageRouter from './message.routes';
 
 const router = Router();
 
+router.get('/health', (req, res) => {
+    res.json({ message: 'API de MoodFlix' });
+});
 router.use('/auth', AuthRouter);
 router.use('/movies', MoviesRouter);
 router.use('/user', UserRouter);
