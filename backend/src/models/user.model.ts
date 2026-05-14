@@ -16,7 +16,7 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema<IUser>(
     {
-        googleSub: { type: String, sparse: true, unique: true },
+        googleSub: { type: String, default: undefined },
         email: { type: String, required: true, unique: true },
         name: { type: String, required: true },
         password: { type: String },
