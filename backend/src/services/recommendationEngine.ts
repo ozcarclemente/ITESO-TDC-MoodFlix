@@ -23,7 +23,7 @@ const WEIGHTS = {
     quality: 25,
 };
 
-function scoreMovie(movie: IMovie, input: QuestionnaireInput): number {
+export function scoreMovie(movie: IMovie, input: QuestionnaireInput): number {
     let score = 0;
 
     if (!movie.scores?.moods?.length) {
